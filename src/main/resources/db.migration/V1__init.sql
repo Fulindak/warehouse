@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS product
 CREATE TABLE IF NOT EXISTS product_type
 (
     id bigint NOT NULL,
-    name varchar(256),
+    name varchar(256) UNIQUE NOT NULL,
     CONSTRAINT product_type_pkey PRIMARY KEY (id)
 );
 
