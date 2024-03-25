@@ -12,7 +12,7 @@ public class ProductType {
     @Id
     @SequenceGenerator(name = "product_type_seq",
             sequenceName = "product_type_seq",
-            initialValue = 1, allocationSize = 20)
+            allocationSize = 20)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_type_seq")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
