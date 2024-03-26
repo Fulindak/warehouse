@@ -1,7 +1,9 @@
 package danila.mediasoft.test.warehouse.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -13,6 +15,8 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "product")
 public class Product {
 
@@ -24,7 +28,7 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "article", unique = true)
+    @Column(name = "article", unique = true, nullable = false)
     private String article;
 
     @Column(name = "quantity")
@@ -33,7 +37,7 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Long price;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_product_type",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -48,6 +52,11 @@ public class Product {
     @CreationTimestamp
     @Column(name = "create_at")
     private Date createAt;
+
+    public Product setPrice(Long price) {
+        this.price = price;
+        return this;
+    }
 
     public Product setName(String name) {
         this.name = name;
@@ -67,5 +76,13 @@ public class Product {
     public Product setProductTypes(Set<ProductType> productTypes) {
         this.productTypes = productTypes;
         return this;
+    }
+
+    public void addType(ProductType type) {
+        productTypes.add(type);
+    }
+
+    public void removeType(ProductType type) {
+        productTypes.remove(type);
     }
 }
