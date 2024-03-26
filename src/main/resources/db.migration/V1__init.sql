@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS product
 (
     id uuid NOT NULL,
     name varchar(256),
-    article varchar(12) UNIQUE,
+    article varchar(12) UNIQUE NOT NULL,
     quantity integer NOT NULL,
     price bigint NOT NULL,
     update_at timestamp,
