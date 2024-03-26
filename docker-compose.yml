@@ -9,3 +9,9 @@ services:
       - .:/docker-entrypoint-initdb.d
     ports:
       - '5432:5432'
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8189:8189"
