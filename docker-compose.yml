@@ -21,3 +21,5 @@ services:
       - 'DATABASE_PASSWORD=${DATABASE_PASSWORD}'
     ports:
       - "8189:8189"
+    links:
+      - db
