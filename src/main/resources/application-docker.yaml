@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: warehouse
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}
@@ -13,10 +11,14 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
+  application:
+    name: warehouse
+
 server:
   port: 8189
   servlet:
     context-path: /api/v0/
+
 application:
   current-profile: docker
 
