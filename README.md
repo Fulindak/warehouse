@@ -51,7 +51,9 @@
    * src/main/resources/db.migration
 
 5. **Запуск приложения**
-      ```bash
+
+  Изменить профиль в  файле [application.yaml](src%2Fmain%2Fresources%2Fapplication.yaml) на docker и выполнить:
+   ```bash
       docker compose --env-file .env up app -d
    ```
 6. **Swagger**
