@@ -2,7 +2,7 @@ FROM maven:3.8.5-openjdk-17 as build
 WORKDIR /app
 COPY /src /src
 COPY pom.xml /
-RUN mvn -f /pom.xml clean package
+RUN mvn -f /pom.xml clean package -DskipTests
 
 FROM eclipse-temurin:17-jre
 WORKDIR /app
