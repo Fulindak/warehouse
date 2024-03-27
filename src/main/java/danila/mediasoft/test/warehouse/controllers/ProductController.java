@@ -56,12 +56,12 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}")
-    private ResponseEntity<GetProductDTO> updateProduct(@RequestBody CreateProductDTO productDTO, @PathVariable UUID productId) {
+    private ResponseEntity<GetProductDTO> updateProduct(@Validated @RequestBody CreateProductDTO productDTO, @PathVariable UUID productId) {
         return new ResponseEntity<>(productService.updateProduct(productId, productDTO) ,HttpStatus.OK);
     }
 
     @PostMapping("/{productId}/quantity")
-    public ResponseEntity<ResponseStatus> updatePrice(@PathVariable UUID productId, @RequestBody UpdateQuantityDTO quantityDTO) {
+    public ResponseEntity<ResponseStatus> updatePrice(@PathVariable UUID productId,@Validated @RequestBody UpdateQuantityDTO quantityDTO) {
         productService.updateQuantity(productId, quantityDTO.getQuantity());
         return new ResponseEntity<>(HttpStatus.OK);
     }
