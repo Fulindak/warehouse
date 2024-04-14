@@ -20,5 +20,5 @@ server:
   servlet:
     context-path: /api/v0/
 application:
-  current-profile: local
+  current-profile: postgres
 
