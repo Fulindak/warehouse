@@ -7,14 +7,14 @@ CREATE TABLE IF NOT EXISTS product
     price bigint NOT NULL,
     update_at timestamp,
     create_at timestamp,
-    CONSTRAINT product_pkey PRIMARY KEY (id)
+    CONSTRAINT product_key PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS product_type
 (
     id bigint NOT NULL,
     name varchar(256) UNIQUE NOT NULL,
-    CONSTRAINT product_type_pkey PRIMARY KEY (id)
+    CONSTRAINT product_type_key PRIMARY KEY (id)
 );
 
 create sequence if not exists product_type_seq

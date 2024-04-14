@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-product-type" author="danila">
+        <createTable tableName="product_type">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(256)">
+                    <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="create-table-product-product-type" author="danila">
+        <createTable tableName="product_product_type">
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_type_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="create-fk-product" author="danila">
+        <addForeignKeyConstraint baseTableName="product_product_type" baseColumnNames="product_id"
+                                 constraintName="product_product_id"
+                                 referencedTableName="product" referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="create-fk-product-type" author="danila">
+        <addForeignKeyConstraint baseTableName="product_product_type" baseColumnNames="product_type_id"
+                                 constraintName="product_type_product_type_id"
+                                 referencedTableName="product_type" referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet  author="danila"  id="product_type_seq">
+        <createSequence  catalogName="home-manager"
+                         dataType="int"
+                         incrementBy="20"
+                         schemaName="public"
+                         sequenceName="product_type_seq"
+                         startValue="1"/>
+    </changeSet>
+</databaseChangeLog>

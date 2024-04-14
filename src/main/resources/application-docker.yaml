@@ -13,7 +13,8 @@ spring:
       ddl-auto: validate
   application:
     name: warehouse
-
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
 server:
   port: 8189
   servlet:
