@@ -2,6 +2,7 @@ package danila.mediasoft.test.warehouse.controllers;
 
 import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.GetProductDTO;
+import danila.mediasoft.test.warehouse.dto.product.UpdateProductDto;
 import danila.mediasoft.test.warehouse.dto.product.UpdateQuantityDTO;
 import danila.mediasoft.test.warehouse.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public  ResponseEntity<GetProductDTO> getProducts(@PathVariable UUID productId) {
+    public  ResponseEntity<GetProductDTO> getProductById(@PathVariable UUID productId) {
         return new ResponseEntity<>(productService.getProductById(productId),
                             HttpStatus.OK);
     }
@@ -56,7 +57,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}")
-    private ResponseEntity<GetProductDTO> updateProduct(@Validated @RequestBody CreateProductDTO productDTO, @PathVariable UUID productId) {
+    private ResponseEntity<GetProductDTO> updateProduct(@Validated @RequestBody UpdateProductDto productDTO, @PathVariable UUID productId) {
         return new ResponseEntity<>(productService.updateProduct(productId, productDTO) ,HttpStatus.OK);
     }
 

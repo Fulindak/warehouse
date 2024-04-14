@@ -1,7 +1,7 @@
 package danila.mediasoft.test.warehouse.controllers;
 
 import danila.mediasoft.test.warehouse.dto.producttype.CreateProductTypeDTO;
-import danila.mediasoft.test.warehouse.entities.ProductType;
+import danila.mediasoft.test.warehouse.dto.producttype.GetProductTypeDto;
 import danila.mediasoft.test.warehouse.services.ProductTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class ProductTypeController {
     private final ProductTypeService productTypeService;
 
     @GetMapping(value = "/")
-    public ResponseEntity<List<ProductType>> getTypes() {
+    public ResponseEntity<List<GetProductTypeDto>> getTypes() {
         return new ResponseEntity<>(
                 productTypeService.getAllTypes(),
                 HttpStatus.OK

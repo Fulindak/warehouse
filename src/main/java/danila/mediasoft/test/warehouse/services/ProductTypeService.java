@@ -1,6 +1,7 @@
 package danila.mediasoft.test.warehouse.services;
 
 import danila.mediasoft.test.warehouse.dto.producttype.CreateProductTypeDTO;
+import danila.mediasoft.test.warehouse.dto.producttype.GetProductTypeDto;
 import danila.mediasoft.test.warehouse.entities.ProductType;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
@@ -21,10 +22,10 @@ public class ProductTypeService {
     private final ProductTypeRepository productTypeRepository;
     private final ProductTypeMapper productTypeMapper;
 
-    public List<ProductType> getAllTypes() {
+    public List<GetProductTypeDto> getAllTypes() {
         List<ProductType> types = new ArrayList<>();
         productTypeRepository.findAll().forEach(types::add);
-        return types;
+        return types.stream().map(o -> new GetProductTypeDto().setId(o.getId()).setName(o.getName())).toList();
     }
 
     public ProductType getById(Long id) {

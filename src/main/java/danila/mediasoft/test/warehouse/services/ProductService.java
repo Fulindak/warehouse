@@ -2,6 +2,7 @@ package danila.mediasoft.test.warehouse.services;
 
 import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.GetProductDTO;
+import danila.mediasoft.test.warehouse.dto.product.UpdateProductDto;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
@@ -28,23 +29,19 @@ public class ProductService {
     public void createProduct(CreateProductDTO createProductDTO) {
         try {
             Product product = new Product();
-            updateProductEntity(createProductDTO, product);
+            product.setPrice(createProductDTO.getPrice())
+                    .setQuantity(createProductDTO.getQuantity())
+                    .setArticle(createProductDTO.getArticle())
+                    .setName(createProductDTO.getName());//productMapper.toEntity(createProductDTO);
+            createProductDTO.getTypes().stream()
+                    .map(productTypeService::getById)
+                    .forEach(product::addType);
             log.info("Save product : " + product);
             productRepository.save(product);
         }   catch (DataIntegrityViolationException e) {
             log.info("Product  exist");
             throw new ValueAlreadyExistsException("Product by article '" + createProductDTO.getArticle() + "' already exist");
         }
-    }
-
-    private void updateProductEntity(CreateProductDTO createProductDTO, Product product) {
-        product.setPrice(createProductDTO.getPrice())
-                .setQuantity(createProductDTO.getQuantity())
-                .setArticle(createProductDTO.getArticle())
-                .setName(createProductDTO.getName());//productMapper.toEntity(createProductDTO);
-        createProductDTO.getTypes().stream()
-                .map(productTypeService::getById)
-                .forEach(product::addType);
     }
 
     public List<GetProductDTO> getProducts(PageRequest pageRequest) {
@@ -108,10 +105,16 @@ public class ProductService {
     }
 
     @Transactional
-    public GetProductDTO updateProduct(UUID productId, CreateProductDTO createProductDTO) {
+    public GetProductDTO updateProduct(UUID productId, UpdateProductDto updateProductDto) {
         Product product = getProductAndTypes(productId);
         product.setProductTypes(new HashSet<>());
-        updateProductEntity(createProductDTO, product);
+        product.setPrice(updateProductDto.getPrice())
+                .setQuantity(updateProductDto.getQuantity())
+                .setArticle(updateProductDto.getArticle())
+                .setName(updateProductDto.getName());//productMapper.toEntity(createProductDTO);
+        updateProductDto.getTypes().stream()
+                .map(productTypeService::getById)
+                .forEach(product::addType);
         return getProductDTO(productRepository.save(product));
     }
 
