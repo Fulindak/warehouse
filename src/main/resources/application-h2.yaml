@@ -13,17 +13,17 @@ spring:
     password: ${DATABASE_PASSWORD}
 
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:db/changelog/db.changelog-master.xml
 
   h2:
     console:
-      enabled: true
+      enabled: true #http://localhost:8188/api/v0/h2-console/
 
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
 
 server:
   port: 8188
