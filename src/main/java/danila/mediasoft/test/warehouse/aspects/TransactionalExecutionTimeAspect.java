@@ -1,33 +1,26 @@
 package danila.mediasoft.test.warehouse.aspects;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Aspect
 @Component
 @Slf4j
-public class TransactionalExecutionTimeAspect {
+public class TransactionalExecutionTimeAspect extends TransactionSynchronizationAdapter {
     private long startTime;
 
-    @Before("@annotation(jakarta.transaction.Transactional)")
-    public void startTime(JoinPoint point) {
-        startTime = System.currentTimeMillis();
-        log.info("ClassName: " + point.getSignature().getDeclaringTypeName()
-                + " MethodName: " +  point.getSignature().getName()
-                + " Start: " + (new Date(startTime)));
+    @Before("@annotation(org.springframework.transaction.annotation.Transactional)")
+    public void registerTransactionSyncrhonization() {
+        startTime = (System.currentTimeMillis());
+        TransactionSynchronizationManager.registerSynchronization(this);
+
     }
 
-    @After("@annotation(jakarta.transaction.Transactional)")
-    public void logExecutionTime(JoinPoint point) {
-        long endTime = System.currentTimeMillis();
-        log.info("ClassName: " + point.getSignature().getDeclaringTypeName()
-                + " MethodName: " +  point.getSignature().getName()
-                + " WorkTime: " + (endTime - startTime) + "ms");
+    public void afterCommit(){
+        log.info("Transaction time work: " + (System.currentTimeMillis() - startTime) + "ms");
     }
 }

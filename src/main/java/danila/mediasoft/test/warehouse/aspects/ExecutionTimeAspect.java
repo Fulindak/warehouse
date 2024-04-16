@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 @Aspect
-@Slf4j
 @Component
+@Slf4j
 @ConditionalOnExpression("${aspect.enabled:true}")
 public class ExecutionTimeAspect {
 
