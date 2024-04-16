@@ -26,7 +26,16 @@ spring:
       ddl-auto: create
 
 server:
-  port: 8188
+  port: ${APP_PORT:8189}
   servlet:
     context-path: /api/v0
+
+app:
+  scheduling:
+    enable: false
+    optimize: true
+    interval: 60000
+  batch:
+    size: 50000
+
 

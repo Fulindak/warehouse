@@ -21,9 +21,18 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
 server:
-  port: 8189
+  port: ${APP_PORT:8189}
   servlet:
     context-path: /api/v0/
+
+app:
+  scheduling:
+    enable: true
+    optimize: true
+    interval: 60000
+  batch:
+    size: 50000
+
 
 
 
