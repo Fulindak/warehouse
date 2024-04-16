@@ -85,4 +85,15 @@ public class Product {
     public void removeType(ProductType type) {
         productTypes.remove(type);
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", article='" + article + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}' + "\n";
+    }
 }
