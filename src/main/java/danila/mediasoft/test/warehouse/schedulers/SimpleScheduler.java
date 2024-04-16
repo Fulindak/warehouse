@@ -1,6 +1,6 @@
 package danila.mediasoft.test.warehouse.schedulers;
 
-import danila.mediasoft.test.warehouse.aspects.LogExecutTime;
+import danila.mediasoft.test.warehouse.annotations.LogExecutTime;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
 import jakarta.transaction.Transactional;

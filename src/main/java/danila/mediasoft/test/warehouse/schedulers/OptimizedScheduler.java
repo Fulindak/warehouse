@@ -1,5 +1,6 @@
 package danila.mediasoft.test.warehouse.schedulers;
 
+import danila.mediasoft.test.warehouse.annotations.LogExecutTime;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.repositories.ProductJDBCRepository;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
@@ -35,6 +36,7 @@ public class OptimizedScheduler {
     }
 
     @Transactional
+    @LogExecutTime
     @Scheduled(fixedRateString = "${app.scheduling.interval}")
     @ConditionalOnProperty(value = "app.scheduling.optimize", havingValue = "true")
     public void scheduleTaskUsingCronExpression() {

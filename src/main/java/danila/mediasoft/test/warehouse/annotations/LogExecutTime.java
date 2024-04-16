@@ -1,4 +1,4 @@
-package danila.mediasoft.test.warehouse.aspects;
+package danila.mediasoft.test.warehouse.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

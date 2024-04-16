@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnExpression("${aspect.enabled:true}")
 public class ExecutionTimeAspect {
 
-    @Around("@annotation(danila.mediasoft.test.warehouse.aspects.LogExecutTime)")
+    @Around("@annotation(danila.mediasoft.test.warehouse.annotations.LogExecutTime)")
     public Object executionTime(ProceedingJoinPoint point) throws Throwable {
         long startTime = System.currentTimeMillis();
         Object object = point.proceed();
