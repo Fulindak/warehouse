@@ -14,13 +14,12 @@ import org.springframework.stereotype.Component;
 public class ExecutionTimeAspect {
 
     @Around("@annotation(danila.mediasoft.test.warehouse.annotations.LogExecutTime)")
-    public Object executionTime(ProceedingJoinPoint point) throws Throwable {
+    public void executionTime(ProceedingJoinPoint point) throws Throwable {
         long startTime = System.currentTimeMillis();
         Object object = point.proceed();
         long endTime = System.currentTimeMillis();
         log.info("ClassName: " + point.getSignature().getDeclaringTypeName()
                 + " MethodName: " +  point.getSignature().getName()
         + " WorkTime: " + (endTime-startTime) +"ms");
-        return object;
     }
 }

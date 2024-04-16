@@ -15,9 +15,11 @@ public class TransactionalExecutionTimeAspect extends TransactionSynchronization
 
     @Before("@annotation(org.springframework.transaction.annotation.Transactional)")
     public void registerTransactionSyncrhonization() {
-        startTime = (System.currentTimeMillis());
         TransactionSynchronizationManager.registerSynchronization(this);
 
+    }
+    public void beforeCommit(boolean readOnly) {
+        startTime = (System.currentTimeMillis());
     }
 
     public void afterCommit(){

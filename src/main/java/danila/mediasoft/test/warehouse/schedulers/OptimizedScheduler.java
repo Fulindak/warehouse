@@ -30,6 +30,9 @@ public class OptimizedScheduler {
 
     @Value("${app.batch.size}")
     private int batchSize;
+
+    @Value("${app.scheduling.pessimistic-lock}")
+    private boolean lock;
     private final ProductCustomRepository productCustomRepository;
     private final ProductRepository productRepository;
 
@@ -50,8 +53,11 @@ public class OptimizedScheduler {
             if (productList.isEmpty()) {
                 break;
             }
-
-            productCustomRepository.batchUpdateProduct(productList);
+            if(lock) {
+                productCustomRepository.batchUpdatePricePessimisticLock(productList);
+            } else {
+                productCustomRepository.batchUpdatePriceNoLock(productList);
+            }
             page++;
             log.info("Total updated records: " + (page * batchSize));
             pageable = PageRequest.of(page, batchSize);

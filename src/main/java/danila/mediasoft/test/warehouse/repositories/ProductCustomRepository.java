@@ -2,8 +2,10 @@ package danila.mediasoft.test.warehouse.repositories;
 
 import danila.mediasoft.test.warehouse.entities.Product;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -17,7 +19,16 @@ public class ProductCustomRepository {
     @Value("${app.scheduling.rate}")
     private double rate;
 
-    public void batchUpdateProduct(List<Product> products) {
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    public void batchUpdatePricePessimisticLock(List<Product> products) {
+        batchUpdatePrice(products);
+    }
+
+    public void batchUpdatePriceNoLock(List<Product> products) {
+        batchUpdatePrice(products);
+    }
+
+    private void batchUpdatePrice(List<Product> products) {
         entityManager.unwrap(org.hibernate.Session.class).doWork(connection -> {
             try (PreparedStatement ps = connection.prepareStatement("UPDATE product SET price = ? WHERE id = ?")) {
                 for (Product product : products) {
