@@ -10,9 +10,15 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(256)"/>
-            <column name="article" type="varchar(12)"/>
-            <column name="quantity" type="integer"/>
-            <column name="price" type="bigint"/>
+            <column name="article" type="varchar(12)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="bigint">
+                <constraints nullable="false"/>
+            </column>
             <column name="update_at" type="timestamp"/>
             <column name="create_at" type="timestamp"/>
         </createTable>
