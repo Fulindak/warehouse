@@ -32,7 +32,9 @@ server:
 app:
   scheduling:
     enable: true
-    optimize: true
+    optimize: false
     interval: 60000
+    rate: 1.1
+    pessimistic-lock: false
   batch:
     size: 50000
