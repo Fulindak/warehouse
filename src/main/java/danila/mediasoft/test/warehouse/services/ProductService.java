@@ -1,30 +1,31 @@
 package danila.mediasoft.test.warehouse.services;
 
 import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
-import danila.mediasoft.test.warehouse.dto.product.GetProductDTO;
-import danila.mediasoft.test.warehouse.dto.product.UpdateProductDto;
+import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
+import danila.mediasoft.test.warehouse.dto.product.UpdateProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductTypeService productTypeService;
+    private final ConversionService conversionService;
 
     public void createProduct(CreateProductDTO createProductDTO) {
         try {
@@ -44,13 +45,9 @@ public class ProductService {
         }
     }
 
-    public List<GetProductDTO> getProducts(PageRequest pageRequest) {
-        List<GetProductDTO> products = new ArrayList<>();
-        List<Product> page = productRepository.findAll(pageRequest).getContent();
-        for (Product product : page) {
-            products.add(getProductDTO(product));
-        }
-        return products;
+    public List<ProductDTO> getProducts(PageRequest pageRequest) {
+        List<Product> products = productRepository.findAll(pageRequest).getContent();
+        return products.stream().map(product -> conversionService.convert(product, ProductDTO.class)).toList();
     }
 
     @Transactional
@@ -75,23 +72,17 @@ public class ProductService {
         }
     }
 
-    public GetProductDTO addTypeFromId(UUID productId,Long typeId) {
+    public ProductDTO addTypeFromId(UUID productId, Long typeId) {
         Product product = getProductAndTypes(productId);
         product.addType(productTypeService.getById(typeId));
         return getProductDTO(productRepository.save(product));
     }
 
-    private GetProductDTO getProductDTO(Product product) {
-        return new GetProductDTO()
-                .setId(product.getId())
-                .setName(product.getName())
-                .setArticle(product.getArticle())
-                .setPrice(product.getPrice())
-                .setTypes(product.getProductTypes())
-                .setQuantity(product.getQuantity());
+    private ProductDTO getProductDTO(Product product) {
+        return conversionService.convert(product, ProductDTO.class);
     }
 
-    public GetProductDTO deleteTypeFromId(UUID productId,Long typeId) {
+    public ProductDTO deleteTypeFromId(UUID productId, Long typeId) {
         Product product = getProductAndTypes(productId);
         product.removeType(productTypeService.getById(typeId));
         return getProductDTO(productRepository.save(product));
@@ -100,14 +91,14 @@ public class ProductService {
     public Product getProductAndTypes(UUID uuid) {
         return productRepository.findById(uuid).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
-    public GetProductDTO getProductById(UUID uuid) {
+    public ProductDTO getProductById(UUID uuid) {
         return getProductDTO(getProductAndTypes(uuid));
     }
 
     @Transactional
-    public GetProductDTO updateProduct(UUID productId, UpdateProductDto updateProductDto) {
+    public ProductDTO updateProduct(UUID productId, UpdateProductDTO updateProductDto) {
         Product product = getProductAndTypes(productId);
-        product.setProductTypes(new HashSet<>());
+        product.setProductTypes(new ArrayList<>());
         product.setPrice(updateProductDto.getPrice())
                 .setQuantity(updateProductDto.getQuantity())
                 .setArticle(updateProductDto.getArticle())
@@ -119,3 +110,4 @@ public class ProductService {
     }
 
 }
+

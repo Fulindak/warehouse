@@ -16,7 +16,7 @@ spring:
     hibernate:
       ddl-auto: validate
 server:
-  port: 8189
+  port: 8188
   servlet:
     context-path: /api/v0/
 application:

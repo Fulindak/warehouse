@@ -1,7 +1,7 @@
 package danila.mediasoft.test.warehouse.mappers;
 
 import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
-import danila.mediasoft.test.warehouse.dto.product.GetProductDTO;
+import danila.mediasoft.test.warehouse.dto.product.ProductResponse;
 import danila.mediasoft.test.warehouse.entities.Product;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -27,7 +27,7 @@ public class ProductMapper {
         return modelMapper.map(createProductDTO, Product.class);
     }
 
-    public GetProductDTO toGetProductDTO(Product product) {
-        return modelMapper.map(product, GetProductDTO.class);
+    public ProductResponse toGetProductDTO(Product product) {
+        return modelMapper.map(product, ProductResponse.class);
     }
 }
