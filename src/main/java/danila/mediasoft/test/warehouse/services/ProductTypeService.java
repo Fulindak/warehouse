@@ -1,30 +1,34 @@
 package danila.mediasoft.test.warehouse.services;
 
 import danila.mediasoft.test.warehouse.dto.producttype.CreateProductTypeDTO;
+import danila.mediasoft.test.warehouse.dto.producttype.ProductTypeDTO;
 import danila.mediasoft.test.warehouse.entities.ProductType;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
 import danila.mediasoft.test.warehouse.mappers.ProductTypeMapper;
 import danila.mediasoft.test.warehouse.repositories.ProductTypeRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class ProductTypeService {
     private final ProductTypeRepository productTypeRepository;
     private final ProductTypeMapper productTypeMapper;
+    private final ConversionService conversionService;
 
-    public List<ProductType> getAllTypes() {
-        List<ProductType> types = new ArrayList<>();
-        productTypeRepository.findAll().forEach(types::add);
-        return types;
+    public List<ProductTypeDTO> getAllTypes() {
+        List<ProductType> types = (List<ProductType>) productTypeRepository.findAll();
+        return types.stream()
+                .map(productType ->
+                        conversionService.convert(productType, ProductTypeDTO.class))
+                .toList();
     }
 
     public ProductType getById(Long id) {

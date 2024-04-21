@@ -8,10 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -43,7 +40,7 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "product_type_id")
     )
-    private Set<ProductType> productTypes = new HashSet<>();
+    private List<ProductType> productTypes = new ArrayList<>();
 
     @UpdateTimestamp
     @Column(name = "update_at")
@@ -73,7 +70,7 @@ public class Product {
         return this;
     }
 
-    public Product setProductTypes(Set<ProductType> productTypes) {
+    public Product setProductTypes(List<ProductType> productTypes) {
         this.productTypes = productTypes;
         return this;
     }

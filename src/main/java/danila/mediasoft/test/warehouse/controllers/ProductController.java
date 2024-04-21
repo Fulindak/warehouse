@@ -1,11 +1,10 @@
 package danila.mediasoft.test.warehouse.controllers;
 
-import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
-import danila.mediasoft.test.warehouse.dto.product.GetProductDTO;
-import danila.mediasoft.test.warehouse.dto.product.UpdateQuantityDTO;
+import danila.mediasoft.test.warehouse.dto.product.*;
 import danila.mediasoft.test.warehouse.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,18 +21,22 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
+    private final ConversionService conversionService;
     @GetMapping("/")
-    public  ResponseEntity<List<GetProductDTO>> getProducts(
+    public List<ProductResponse> getProducts(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "25") int size
     ) {
-        return new ResponseEntity<>(productService.getProducts(PageRequest.of(page, size)),
-                    HttpStatus.OK);
+        final List<ProductDTO> products = productService.getProducts(PageRequest.of(page, size));
+        return products.stream()
+                .map(productDTO -> conversionService.convert(productDTO, ProductResponse.class))
+                .toList();
     }
 
     @GetMapping("/{productId}")
-    public  ResponseEntity<GetProductDTO> getProducts(@PathVariable UUID productId) {
-        return new ResponseEntity<>(productService.getProductById(productId),
+    public  ResponseEntity<ProductResponse> getProductById(@PathVariable UUID productId) {
+        return new ResponseEntity<>(conversionService.convert(
+                productService.getProductById(productId), ProductResponse.class),
                             HttpStatus.OK);
     }
 
@@ -46,18 +49,23 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}/type")
-    public ResponseEntity<GetProductDTO> deleteType(@PathVariable UUID productId, @RequestParam Long typeId) {
-        return new ResponseEntity<>(productService.deleteTypeFromId(productId, typeId), HttpStatus.OK);
+    public ResponseEntity<ProductResponse> deleteType(@PathVariable UUID productId, @RequestParam Long typeId) {
+        return new ResponseEntity<>(conversionService.convert(
+                productService.deleteTypeFromId(productId, typeId), ProductResponse.class),
+                HttpStatus.OK);
     }
 
     @PostMapping("/{productId}/type/{typeId}")
-    public ResponseEntity<GetProductDTO> addType(@PathVariable UUID productId, @PathVariable Long typeId) {
-        return new ResponseEntity<>(productService.addTypeFromId(productId, typeId), HttpStatus.OK);
+    public ResponseEntity<ProductResponse> addType(@PathVariable UUID productId, @PathVariable Long typeId) {
+        return new ResponseEntity<>(conversionService.convert(
+                productService.addTypeFromId(productId, typeId), ProductResponse.class),
+                HttpStatus.OK);
     }
 
     @PutMapping(path = "/{productId}")
-    private ResponseEntity<GetProductDTO> updateProduct(@Validated @RequestBody CreateProductDTO productDTO, @PathVariable UUID productId) {
-        return new ResponseEntity<>(productService.updateProduct(productId, productDTO) ,HttpStatus.OK);
+    private ResponseEntity<ProductResponse> updateProduct(@Validated @RequestBody UpdateProductDTO productDTO, @PathVariable UUID productId) {
+        return new ResponseEntity<>(conversionService.convert(productService.updateProduct(productId, productDTO), ProductResponse.class),
+                HttpStatus.OK);
     }
 
     @PostMapping("/{productId}/quantity")
