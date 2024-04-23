@@ -4,15 +4,20 @@ import danila.mediasoft.test.warehouse.dto.producttype.ProductTypeResponse;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 @Data
 @Builder
 public class ProductResponse {
-    UUID id;
-    String name;
-    String article;
-    List<ProductTypeResponse> types;
-    Long price;
-    Integer quantity;
+    private UUID id;
+    private String name;
+    private String article;
+    private List<ProductTypeResponse> types;
+    private BigDecimal price;
+    private Long quantity;
+    private LocalDate createAt;
+    private LocalDateTime updateAt;
 }

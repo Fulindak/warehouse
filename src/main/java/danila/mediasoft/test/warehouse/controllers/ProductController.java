@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -22,6 +23,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final ConversionService conversionService;
+
     @GetMapping("/")
     public List<ProductResponse> getProducts(
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -34,10 +36,10 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public  ResponseEntity<ProductResponse> getProductById(@PathVariable UUID productId) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable UUID productId) {
         return new ResponseEntity<>(conversionService.convert(
                 productService.getProductById(productId), ProductResponse.class),
-                            HttpStatus.OK);
+                HttpStatus.OK);
     }
 
     @PostMapping("/")
@@ -63,13 +65,15 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}")
-    private ResponseEntity<ProductResponse> updateProduct(@Validated @RequestBody UpdateProductDTO productDTO, @PathVariable UUID productId) {
-        return new ResponseEntity<>(conversionService.convert(productService.updateProduct(productId, productDTO), ProductResponse.class),
+    private ResponseEntity<ProductResponse> updateProduct(@Validated @RequestBody UpdateProductDTO updateProductDTO, @PathVariable UUID productId) {
+        ProductDTO product = productService.updateProduct(productId,
+                (Objects.requireNonNull(conversionService.convert(updateProductDTO, ProductDTO.class))));
+        return new ResponseEntity<>(conversionService.convert(productService.updateProduct(productId, product), ProductResponse.class),
                 HttpStatus.OK);
     }
 
     @PostMapping("/{productId}/quantity")
-    public ResponseEntity<ResponseStatus> updatePrice(@PathVariable UUID productId,@Validated @RequestBody UpdateQuantityDTO quantityDTO) {
+    public ResponseEntity<ResponseStatus> updatePrice(@PathVariable UUID productId, @Validated @RequestBody UpdateQuantityDTO quantityDTO) {
         productService.updateQuantity(productId, quantityDTO.getQuantity());
         return new ResponseEntity<>(HttpStatus.OK);
     }

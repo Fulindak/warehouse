@@ -1,5 +1,6 @@
-package danila.mediasoft.test.warehouse.converter;
+package danila.mediasoft.test.warehouse.converter.product;
 
+import danila.mediasoft.test.warehouse.converter.producttype.ProductTypeToProductTypeDTOConverter;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ProductToProductDTOConverter implements Converter<Product, ProductDTO> {
 
-
     private final ProductTypeToProductTypeDTOConverter productTypeDTOConverter;
-
 
     @Override
     public ProductDTO convert(Product product) {
@@ -25,6 +24,8 @@ public class ProductToProductDTOConverter implements Converter<Product, ProductD
                 .name(product.getName())
                 .quantity(product.getQuantity())
                 .article(product.getArticle())
+                .createAt(product.getCreateAt())
+                .updateAt(product.getUpdateAt())
                 .build();
     }
 }
