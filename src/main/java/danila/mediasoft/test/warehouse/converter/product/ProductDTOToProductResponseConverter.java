@@ -1,5 +1,6 @@
-package danila.mediasoft.test.warehouse.converter;
+package danila.mediasoft.test.warehouse.converter.product;
 
+import danila.mediasoft.test.warehouse.converter.producttype.ProductTypeDTOToProductResponseConverter;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class ProductDTOToProductResponseConverter implements Converter<ProductDT
                 .name(productDTO.getName())
                 .quantity(productDTO.getQuantity())
                 .article(productDTO.getArticle())
+                .createAt(productDTO.getCreateAt())
+                .updateAt(productDTO.getUpdateAt())
                 .build();
     }
 }

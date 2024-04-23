@@ -4,6 +4,7 @@ import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.UpdateProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
+import danila.mediasoft.test.warehouse.entities.ProductType;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
@@ -27,22 +28,24 @@ public class ProductService {
     private final ProductTypeService productTypeService;
     private final ConversionService conversionService;
 
-    public void createProduct(CreateProductDTO createProductDTO) {
-        try {
-            Product product = new Product();
-            product.setPrice(createProductDTO.getPrice())
-                    .setQuantity(createProductDTO.getQuantity())
-                    .setArticle(createProductDTO.getArticle())
-                    .setName(createProductDTO.getName());//productMapper.toEntity(createProductDTO);
-            createProductDTO.getTypes().stream()
-                    .map(productTypeService::getById)
-                    .forEach(product::addType);
-            log.info("Save product : " + product);
-            productRepository.save(product);
-        }   catch (DataIntegrityViolationException e) {
-            log.info("Product  exist");
-            throw new ValueAlreadyExistsException("Product by article '" + createProductDTO.getArticle() + "' already exist");
+    public void createProduct(CreateProductDTO productDTO) {
+        if (productRepository.findByArticle(productDTO.getArticle()).isPresent()) {
+            log.info("Product with article: " + productDTO.getArticle() + " exist");
+            throw new ValueAlreadyExistsException("Product by article '" + productDTO.getArticle() + "' already exist");
         }
+        Product product = Product.builder()
+                .price(productDTO.getPrice())
+                .quantity(productDTO.getQuantity())
+                .article(productDTO.getArticle())
+                .name(productDTO.getName())
+                .productTypes(new ArrayList<>())
+                .build();
+        for(Long i : productDTO.getTypes()) {
+            ProductType productType = productTypeService.getById(i);
+            product.addType(productType);
+        }
+        productRepository.save(product);
+        log.info("Save product : " + product);
     }
 
     public List<ProductDTO> getProducts(PageRequest pageRequest) {
@@ -51,25 +54,26 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateQuantity(UUID productId, Integer newQuantity) {
-        try {
-            log.info("Start update product by id :" + productId);
-            productRepository.updateQuantity(productId, newQuantity);
-            log.info("Update  success");
-        }   catch (DataIntegrityViolationException e) {
+    public void updateQuantity(UUID productId, Long newQuantity) {
+        if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException("Product not found");
         }
+
+        log.info("Start update product by id :" + productId);
+        productRepository.updateQuantity(productId, newQuantity);
+        log.info("Update  success");
+
     }
 
     @Transactional
     public void updatePrice(UUID productId, Long newPrice) {
-        try {
-            log.info("Start update product by id :" + productId);
-            productRepository.updatePrice(productId, newPrice);
-            log.info("Update  success");
-        }   catch (DataIntegrityViolationException e) {
+        if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException("Product not found");
         }
+
+        log.info("Start update product by id :" + productId);
+        productRepository.updatePrice(productId, newPrice);
+        log.info("Update  success");
     }
 
     public ProductDTO addTypeFromId(UUID productId, Long typeId) {
@@ -91,21 +95,23 @@ public class ProductService {
     public Product getProductAndTypes(UUID uuid) {
         return productRepository.findById(uuid).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
+
     public ProductDTO getProductById(UUID uuid) {
         return getProductDTO(getProductAndTypes(uuid));
     }
 
     @Transactional
-    public ProductDTO updateProduct(UUID productId, UpdateProductDTO updateProductDto) {
+    public ProductDTO updateProduct(UUID productId, ProductDTO productDTO) {
         Product product = getProductAndTypes(productId);
         product.setProductTypes(new ArrayList<>());
-        product.setPrice(updateProductDto.getPrice())
-                .setQuantity(updateProductDto.getQuantity())
-                .setArticle(updateProductDto.getArticle())
-                .setName(updateProductDto.getName());//productMapper.toEntity(createProductDTO);
-        updateProductDto.getTypes().stream()
-                .map(productTypeService::getById)
+        product.setPrice(productDTO.getPrice());
+        product.setQuantity(productDTO.getQuantity());
+        product.setArticle(productDTO.getArticle());
+        product.setName(productDTO.getName());
+        productDTO.getTypes().stream()
+                .map(type -> productTypeService.getById(type.getId()))
                 .forEach(product::addType);
+
         return getProductDTO(productRepository.save(product));
     }
 

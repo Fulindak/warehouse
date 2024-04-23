@@ -10,5 +10,5 @@ import lombok.Data;
 public class UpdateQuantityDTO {
     @Schema(description = "Product  quantity in kopecks", example = "25")
     @NotNull(message = "Product quantity must be not null", groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
-    Integer quantity;
+    private Long quantity;
 }

@@ -11,10 +11,10 @@
             </column>
             <column name="name" type="varchar(256)"/>
             <column name="article" type="varchar(12)"/>
-            <column name="quantity" type="integer"/>
-            <column name="price" type="bigint"/>
-            <column name="update_at" type="timestamp"/>
-            <column name="create_at" type="timestamp"/>
+            <column name="quantity" type="bigint"/>
+            <column name="price" type="numeric(19,2)"/>
+            <column name="update_at" type="timestamp(6)"/>
+            <column name="create_at" type="date"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

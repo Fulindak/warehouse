@@ -1,4 +1,4 @@
-package danila.mediasoft.test.warehouse.converter;
+package danila.mediasoft.test.warehouse.converter.producttype;
 
 import danila.mediasoft.test.warehouse.dto.producttype.ProductTypeDTO;
 import danila.mediasoft.test.warehouse.entities.ProductType;

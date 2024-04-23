@@ -23,5 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Modifying
     @Query("update Product u set u.quantity = :newQuantity where u.id = :productId")
-    void updateQuantity(@Param("productId") UUID productId, @Param("newQuantity") Integer newQuantity);
+    void updateQuantity(@Param("productId") UUID productId, @Param("newQuantity") Long newQuantity);
+
+    Optional<Product> findByArticle(String article);
 }

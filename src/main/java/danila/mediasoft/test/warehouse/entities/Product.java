@@ -1,19 +1,22 @@
 package danila.mediasoft.test.warehouse.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "product")
 public class Product {
 
@@ -29,10 +32,10 @@ public class Product {
     private String article;
 
     @Column(name = "quantity")
-    private Integer quantity = 0;
+    private Long quantity = 0L;
 
     @Column(name = "price", nullable = false)
-    private Long price;
+    private BigDecimal price;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -40,40 +43,15 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "product_type_id")
     )
-    private List<ProductType> productTypes = new ArrayList<>();
+    private List<ProductType> productTypes;
 
     @UpdateTimestamp
     @Column(name = "update_at")
-    private Date updateAt;
+    private LocalDateTime updateAt;
 
     @CreationTimestamp
     @Column(name = "create_at")
-    private Date createAt;
-
-    public Product setPrice(Long price) {
-        this.price = price;
-        return this;
-    }
-
-    public Product setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public Product setArticle(String article) {
-        this.article = article;
-        return this;
-    }
-
-    public Product setQuantity(Integer quantity) {
-        this.quantity = quantity;
-        return this;
-    }
-
-    public Product setProductTypes(List<ProductType> productTypes) {
-        this.productTypes = productTypes;
-        return this;
-    }
+    private LocalDate createAt;
 
     public void addType(ProductType type) {
         productTypes.add(type);

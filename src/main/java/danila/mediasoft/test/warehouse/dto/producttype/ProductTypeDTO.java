@@ -6,8 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class ProductTypeDTO {
-
     private Long id;
-
     private String name;
 }
