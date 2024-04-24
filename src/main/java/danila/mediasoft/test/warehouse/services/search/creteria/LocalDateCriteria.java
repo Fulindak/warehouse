@@ -1,11 +1,9 @@
 package danila.mediasoft.test.warehouse.services.search.creteria;
 
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
-import danila.mediasoft.test.warehouse.services.search.strategy.BigDecimalPredicateStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.LocalDateStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrategy;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class LocalDateCriteria implements Criteria<LocalDate> {
