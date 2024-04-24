@@ -2,6 +2,7 @@ package danila.mediasoft.test.warehouse.controllers;
 
 import danila.mediasoft.test.warehouse.dto.product.*;
 import danila.mediasoft.test.warehouse.services.ProductService;
+import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
@@ -76,6 +77,14 @@ public class ProductController {
     public ResponseEntity<ResponseStatus> updatePrice(@PathVariable UUID productId, @Validated @RequestBody UpdateQuantityDTO quantityDTO) {
         productService.updateQuantity(productId, quantityDTO.getQuantity());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchByCriteria(@Validated @RequestBody List<Criteria> criteriaList) {
+        List<ProductDTO> productDTOList = productService.search(criteriaList);
+        return ResponseEntity.ok(productDTOList.stream()
+                .map(productDTO ->
+                        conversionService.convert(productDTO, ProductResponse.class)).toList());
     }
 
 

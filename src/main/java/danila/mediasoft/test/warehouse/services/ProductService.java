@@ -2,17 +2,17 @@ package danila.mediasoft.test.warehouse.services;
 
 import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
-import danila.mediasoft.test.warehouse.dto.product.UpdateProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.entities.ProductType;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
+import danila.mediasoft.test.warehouse.services.search.ProductSpecification;
+import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +27,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductTypeService productTypeService;
     private final ConversionService conversionService;
+    private final ProductSpecification productSpecification;
 
     public void createProduct(CreateProductDTO productDTO) {
         if (productRepository.findByArticle(productDTO.getArticle()).isPresent()) {
@@ -40,7 +41,7 @@ public class ProductService {
                 .name(productDTO.getName())
                 .productTypes(new ArrayList<>())
                 .build();
-        for(Long i : productDTO.getTypes()) {
+        for (Long i : productDTO.getTypes()) {
             ProductType productType = productTypeService.getById(i);
             product.addType(productType);
         }
@@ -113,6 +114,13 @@ public class ProductService {
                 .forEach(product::addType);
 
         return getProductDTO(productRepository.save(product));
+    }
+
+    public List<ProductDTO> search(List<Criteria> criteriaList) {
+        List<Product> products = productRepository.findAll(productSpecification.findProductByCriteria(criteriaList));
+        return products.stream()
+                .map(product ->
+                        conversionService.convert(product, ProductDTO.class)).toList();
     }
 
 }
