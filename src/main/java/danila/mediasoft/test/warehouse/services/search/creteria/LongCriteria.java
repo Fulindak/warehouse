@@ -5,6 +5,7 @@ import danila.mediasoft.test.warehouse.services.search.strategy.LongStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrategy;
 
 public class LongCriteria implements Criteria<Long> {
+
     private final PredicateStrategy<Long> strategy = new LongStrategy();
     private String field;
     private Long value;

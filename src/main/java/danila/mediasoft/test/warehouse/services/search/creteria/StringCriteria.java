@@ -5,6 +5,7 @@ import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrateg
 import danila.mediasoft.test.warehouse.services.search.strategy.StringStrategy;
 
 public class StringCriteria implements Criteria<String> {
+
     private final PredicateStrategy<String> strategy = new StringStrategy();
     private String field;
     private String value;

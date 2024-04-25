@@ -7,6 +7,7 @@ import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrateg
 import java.time.LocalDate;
 
 public class LocalDateCriteria implements Criteria<LocalDate> {
+
     private final PredicateStrategy<LocalDate> strategy = new LocalDateStrategy();
     private String field;
     private LocalDate value;

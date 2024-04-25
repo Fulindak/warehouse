@@ -2,6 +2,8 @@ package danila.mediasoft.test.warehouse.services.search.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import danila.mediasoft.test.warehouse.exceptions.OperationNotFoundException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,10 @@ public enum Operation {
 
     @JsonCreator
     public static Operation fromString(String value) {
+        Operation operation = symbolToEnum.getOrDefault(value, wordToEnum.get(value));
+        if(operation == null) {
+            throw  new OperationNotFoundException("Unsupported operation: " + value).setOperationValue(value);
+        }
         return symbolToEnum.getOrDefault(value, wordToEnum.get(value));
     }
 

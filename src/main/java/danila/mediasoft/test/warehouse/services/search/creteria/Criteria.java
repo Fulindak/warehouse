@@ -1,5 +1,6 @@
 package danila.mediasoft.test.warehouse.services.search.creteria;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
@@ -21,5 +22,6 @@ public interface Criteria<T> {
 
     Operation getOperation();
 
+    @JsonIgnore
     PredicateStrategy<T> getStrategy();
 }
