@@ -3,9 +3,11 @@ package danila.mediasoft.test.warehouse.services.search.creteria;
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
 import danila.mediasoft.test.warehouse.services.search.strategy.LocalDateTimeStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrategy;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Builder
 public class LocalDateTimeCriteria implements Criteria<LocalDateTime> {
 
     private final PredicateStrategy<LocalDateTime> strategy = new LocalDateTimeStrategy();

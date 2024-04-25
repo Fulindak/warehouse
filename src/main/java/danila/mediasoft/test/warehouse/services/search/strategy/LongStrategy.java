@@ -22,9 +22,6 @@ public class LongStrategy implements PredicateStrategy<Long> {
 
     @Override
     public Predicate getLikePattern(Expression<Long> expression, Long value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.and(
-                criteriaBuilder.greaterThanOrEqualTo(expression, (long)(value * 0.8)),
-                criteriaBuilder.greaterThanOrEqualTo(expression, (long)(value * 1.1))
-        );
+        return criteriaBuilder.equal(expression, value);
     }
 }

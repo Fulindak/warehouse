@@ -3,7 +3,9 @@ package danila.mediasoft.test.warehouse.services.search.creteria;
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
 import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.StringStrategy;
+import lombok.Builder;
 
+@Builder
 public class StringCriteria implements Criteria<String> {
 
     private final PredicateStrategy<String> strategy = new StringStrategy();

@@ -3,7 +3,9 @@ package danila.mediasoft.test.warehouse.services.search.creteria;
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
 import danila.mediasoft.test.warehouse.services.search.strategy.LongStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrategy;
+import lombok.Builder;
 
+@Builder
 public class LongCriteria implements Criteria<Long> {
 
     private final PredicateStrategy<Long> strategy = new LongStrategy();
