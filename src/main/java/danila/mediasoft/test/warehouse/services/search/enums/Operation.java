@@ -32,8 +32,8 @@ public enum Operation {
     @JsonCreator
     public static Operation fromString(String value) {
         Operation operation = symbolToEnum.getOrDefault(value, wordToEnum.get(value));
-        if(operation == null) {
-            throw  new OperationNotFoundException("Unsupported operation: " + value).setOperationValue(value);
+        if (operation == null) {
+            throw new OperationNotFoundException("Unsupported operation: " + value).setOperationValue(value);
         }
         return symbolToEnum.getOrDefault(value, wordToEnum.get(value));
     }

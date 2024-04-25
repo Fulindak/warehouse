@@ -38,4 +38,10 @@ public class ControllerAdvice {
         return new ErrorResponse("Incorrect data type");
     }
 
+    @ExceptionHandler(OperationNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIncorrectOperation(OperationNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
 }
