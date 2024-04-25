@@ -1,14 +1,6 @@
 package danila.mediasoft.test.warehouse.motherObject;
 
-import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.entities.ProductType;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class ProductTypeBuilder {
     public static final Long DEFAULT_ID = 1L;
