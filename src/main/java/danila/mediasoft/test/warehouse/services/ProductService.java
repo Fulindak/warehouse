@@ -9,13 +9,13 @@ import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
 import danila.mediasoft.test.warehouse.services.search.ProductSpecification;
 import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

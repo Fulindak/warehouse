@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSpecification implements Specification<Product> {
-    private final List<Criteria> criteriaList;
-    private final List<Predicate> predicates;
+    private List<Criteria> criteriaList;
+    private List<Predicate> predicates;
+     private PredicateStrategy strategy;
 
     public ProductSpecification(List<Criteria> criteria) {
         this.predicates = new ArrayList<>();
@@ -24,7 +25,7 @@ public class ProductSpecification implements Specification<Product> {
     @Override
     public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         for (Criteria criteria : criteriaList) {
-            PredicateStrategy strategy = criteria.getStrategy();
+            strategy = criteria.getStrategy();
             switch (criteria.getOperation()) {
                 case LIKE -> predicates.add(strategy.getLikePattern(root.get(criteria.getField()),
                         criteria.getValue(),
