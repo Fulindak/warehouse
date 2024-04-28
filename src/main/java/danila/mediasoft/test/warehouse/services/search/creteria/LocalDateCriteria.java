@@ -3,6 +3,8 @@ package danila.mediasoft.test.warehouse.services.search.creteria;
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
 import danila.mediasoft.test.warehouse.services.search.strategy.LocalDateStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrategy;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -10,9 +12,12 @@ import java.time.LocalDate;
 @Builder
 public class LocalDateCriteria implements Criteria<LocalDate> {
 
-    private final PredicateStrategy<LocalDate> strategy = new LocalDateStrategy();
+    private static final PredicateStrategy<LocalDate> strategy = new LocalDateStrategy();
+    @NotNull
     private String field;
+    @NotNull
     private LocalDate value;
+    @NotNull
     private Operation operation;
 
     @Override

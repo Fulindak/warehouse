@@ -14,20 +14,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ProductService {
+    public static final String PRODUCT_NOT_FOUND = "Product not found";
     private final ProductRepository productRepository;
     private final ProductTypeService productTypeService;
     private final ConversionService conversionService;
-    private final ProductSpecification productSpecification;
 
     public void createProduct(CreateProductDTO productDTO) {
         if (productRepository.findByArticle(productDTO.getArticle()).isPresent()) {
@@ -57,7 +60,7 @@ public class ProductService {
     @Transactional
     public void updateQuantity(UUID productId, Long newQuantity) {
         if (productRepository.findById(productId).isEmpty()) {
-            throw new ResourceNotFoundException("Product not found");
+            throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
         }
 
         log.info("Start update product by id :" + productId);
@@ -69,7 +72,7 @@ public class ProductService {
     @Transactional
     public void updatePrice(UUID productId, Long newPrice) {
         if (productRepository.findById(productId).isEmpty()) {
-            throw new ResourceNotFoundException("Product not found");
+            throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
         }
 
         log.info("Start update product by id :" + productId);
@@ -94,7 +97,7 @@ public class ProductService {
     }
 
     public Product getProductAndTypes(UUID uuid) {
-        return productRepository.findById(uuid).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        return productRepository.findById(uuid).orElseThrow(() -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
     }
 
     public ProductDTO getProductById(UUID uuid) {
@@ -116,12 +119,31 @@ public class ProductService {
         return getProductDTO(productRepository.save(product));
     }
 
-    public List<ProductDTO> search(List<Criteria> criteriaList) {
-        List<Product> products = productRepository.findAll(productSpecification.findProductByCriteria(criteriaList));
+    public List<ProductDTO> search(List<Criteria> criteriaList, Pageable pageable) {
+        ProductSpecification specification;
+        specification = new ProductSpecification(criteriaList);
+        List<Product> products = productRepository.findAll(specification, pageable).getContent();
         return products.stream()
                 .map(product ->
                         conversionService.convert(product, ProductDTO.class)).toList();
     }
 
+    @Transactional
+    public void insertDemoValue(int size) {
+        productRepository.deleteAll();
+        var products = IntStream.range(0, size)
+                .mapToObj(
+                        index ->
+                                Product.builder()
+                                        .price(BigDecimal.valueOf(index + 50))
+                                        .article("article_" + index)
+                                        .name("product_" + index)
+                                        .id(UUID.randomUUID())
+                                        .quantity((long) index)
+                                        .productTypes(new ArrayList<>())
+                                        .build())
+                .toList();
+        productRepository.saveAll(products);
+    }
 }
 

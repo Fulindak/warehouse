@@ -34,14 +34,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIncorrectDataType() {
-        return new ErrorResponse("Incorrect data type");
+    public ErrorResponse handleIncorrectDataType(HttpMessageNotReadableException e) {
+        return new ErrorResponse("Incorrect data type: " + e.getMessage());
     }
-
-    @ExceptionHandler(OperationNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIncorrectOperation(OperationNotFoundException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
 }

@@ -1,5 +1,6 @@
 package danila.mediasoft.test.warehouse.repositories;
 
+import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.motherObject.ProductBuilder;
 import danila.mediasoft.test.warehouse.services.search.ProductSpecification;
 import danila.mediasoft.test.warehouse.services.search.creteria.BigDecimalCriteria;
@@ -9,11 +10,11 @@ import danila.mediasoft.test.warehouse.services.search.creteria.LongCriteria;
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,16 +29,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductRepositoryTest {
     @Autowired
     ProductRepository productRepositoryUnderTest;
-    @InjectMocks
-    ProductSpecification productSpecificationUnderTest;
-
     final String fieldQuantity = "quantity";
     final String fieldCreateAt = "createAt";
-
     final String fieldPrice = "price";
+    private final Integer dbSize = 10;
 
-
-    private final Integer dbSize = 50;
+    PageRequest page = PageRequest.of(0, 5);
 
     @BeforeEach
     void setUp() {
@@ -61,7 +58,7 @@ class ProductRepositoryTest {
     @Test
     void givenProductEntity_whenFindAll_thenReturnExpectedSize() {
         var products = productRepositoryUnderTest.findAll();
-        assertThat(products.size()).isEqualTo(dbSize);
+        assertThat(products).hasSize(dbSize);
     }
 
     @Test
@@ -73,11 +70,11 @@ class ProductRepositoryTest {
                         .operation(Operation.LIKE)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(dbSize);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
+
+        assertThat(products).hasSize(dbSize);
     }
 
     @Test
@@ -89,12 +86,11 @@ class ProductRepositoryTest {
                         .operation(Operation.EQUAL)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(dbSize);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        List<Product> products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
 
+        assertThat(products).hasSize(dbSize);
     }
 
     @Test
@@ -103,15 +99,14 @@ class ProductRepositoryTest {
                 LocalDateCriteria.builder()
                         .value(ProductBuilder.DEFAULT_CREATE_AT)
                         .field(fieldCreateAt)
-                        .operation(Operation.GREATER_THAN_OR_EQ)
+                        .operation(Operation.GRATER_THAN_OR_EQ)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(dbSize);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
 
+        assertThat(products).hasSize(dbSize);
     }
 
     @Test
@@ -123,12 +118,11 @@ class ProductRepositoryTest {
                         .operation(Operation.LESS_THAN_OR_EQ)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(dbSize);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
 
+        assertThat(products).hasSize(dbSize);
     }
 
     @Test
@@ -140,11 +134,11 @@ class ProductRepositoryTest {
                         .operation(Operation.LIKE)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(1);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
+
+        assertThat(products).hasSize(1);
     }
 
     @Test
@@ -156,12 +150,11 @@ class ProductRepositoryTest {
                         .operation(Operation.EQUAL)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(1);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
 
+        assertThat(products).hasSize(1);
     }
 
     @Test
@@ -170,15 +163,14 @@ class ProductRepositoryTest {
                 LongCriteria.builder()
                         .value(25L)
                         .field(fieldQuantity)
-                        .operation(Operation.GREATER_THAN_OR_EQ)
+                        .operation(Operation.EQUAL)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(25);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
 
+        assertThat(products).hasSize(1);
     }
 
     @Test
@@ -190,12 +182,11 @@ class ProductRepositoryTest {
                         .operation(Operation.LESS_THAN_OR_EQ)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(50);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
 
+        assertThat(products).hasSize(50);
     }
 
     @Test
@@ -209,7 +200,7 @@ class ProductRepositoryTest {
                 BigDecimalCriteria.builder()
                         .value(BigDecimal.valueOf(60))
                         .field(fieldPrice)
-                        .operation(Operation.GREATER_THAN_OR_EQ)
+                        .operation(Operation.GRATER_THAN_OR_EQ)
                         .build(),
                 LocalDateCriteria.builder()
                         .value(ProductBuilder.DEFAULT_CREATE_AT)
@@ -217,10 +208,10 @@ class ProductRepositoryTest {
                         .operation(Operation.LESS_THAN_OR_EQ)
                         .build()
         );
-        var products = productRepositoryUnderTest.findAll(
-                productSpecificationUnderTest.findProductByCriteria(criteria)
-        );
 
-        assertThat(products.size()).isEqualTo(16);
+        ProductSpecification productSpecification = new ProductSpecification(criteria);
+        var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
+
+        assertThat(products).hasSize(16);
     }
 }
