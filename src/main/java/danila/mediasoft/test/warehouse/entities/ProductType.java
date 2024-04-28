@@ -18,7 +18,6 @@ public class ProductType {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_type_seq")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
-
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 

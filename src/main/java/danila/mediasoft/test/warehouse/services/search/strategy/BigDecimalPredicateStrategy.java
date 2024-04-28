@@ -6,7 +6,7 @@ import jakarta.persistence.criteria.Predicate;
 
 import java.math.BigDecimal;
 
-public class BigDecimalPredicateStrategy implements PredicateStrategy<BigDecimal>{
+public class BigDecimalPredicateStrategy implements PredicateStrategy<BigDecimal> {
     @Override
     public Predicate getEqPattern(Expression<BigDecimal> expression, BigDecimal value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.equal(expression, value);

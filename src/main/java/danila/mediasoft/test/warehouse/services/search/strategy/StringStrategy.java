@@ -4,9 +4,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 
-public class StringStrategy implements  PredicateStrategy<String> {
-
-
+public class StringStrategy implements PredicateStrategy<String> {
     @Override
     public Predicate getEqPattern(Expression<String> expression, String value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.equal(expression, value);
@@ -19,7 +17,7 @@ public class StringStrategy implements  PredicateStrategy<String> {
 
     @Override
     public Predicate getEndPattern(Expression<String> expression, String value, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.like(expression, "%"+ value);
+        return criteriaBuilder.like(expression, "%" + value);
     }
 
     @Override

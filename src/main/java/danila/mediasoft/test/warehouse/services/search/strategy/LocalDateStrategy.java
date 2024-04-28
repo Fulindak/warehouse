@@ -7,7 +7,6 @@ import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDate;
 
 public class LocalDateStrategy implements PredicateStrategy<LocalDate> {
-
     @Override
     public Predicate getEqPattern(Expression<LocalDate> expression, LocalDate value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.equal(expression, value);

@@ -9,7 +9,8 @@ import org.hibernate.annotations.UuidGenerator;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -19,24 +20,18 @@ import java.util.*;
 @Builder
 @Table(name = "product")
 public class Product {
-
     @Id
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     @Column(name = "id", updatable = false, nullable = false)
-    private  UUID id;
-
+    private UUID id;
     @Column(name = "name")
     private String name;
-
     @Column(name = "article", unique = true, nullable = false)
     private String article;
-
     @Column(name = "quantity")
     private Long quantity = 0L;
-
     @Column(name = "price", nullable = false)
     private BigDecimal price;
-
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_product_type",
@@ -44,11 +39,9 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "product_type_id")
     )
     private List<ProductType> productTypes;
-
     @UpdateTimestamp
     @Column(name = "update_at")
     private LocalDateTime updateAt;
-
     @CreationTimestamp
     @Column(name = "create_at")
     private LocalDate createAt;

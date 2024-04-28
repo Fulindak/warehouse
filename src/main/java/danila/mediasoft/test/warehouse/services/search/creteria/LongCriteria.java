@@ -3,13 +3,11 @@ package danila.mediasoft.test.warehouse.services.search.creteria;
 import danila.mediasoft.test.warehouse.services.search.enums.Operation;
 import danila.mediasoft.test.warehouse.services.search.strategy.LongStrategy;
 import danila.mediasoft.test.warehouse.services.search.strategy.PredicateStrategy;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
 public class LongCriteria implements Criteria<Long> {
-
     private static final PredicateStrategy<Long> strategy = new LongStrategy();
     @NotNull
     private String field;

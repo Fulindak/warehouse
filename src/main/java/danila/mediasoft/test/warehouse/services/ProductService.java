@@ -62,7 +62,6 @@ public class ProductService {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
         }
-
         log.info("Start update product by id :" + productId);
         productRepository.updateQuantity(productId, newQuantity);
         log.info("Update  success");
@@ -74,7 +73,6 @@ public class ProductService {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
         }
-
         log.info("Start update product by id :" + productId);
         productRepository.updatePrice(productId, newPrice);
         log.info("Update  success");
@@ -115,7 +113,6 @@ public class ProductService {
         productDTO.getTypes().stream()
                 .map(type -> productTypeService.getById(type.getId()))
                 .forEach(product::addType);
-
         return getProductDTO(productRepository.save(product));
     }
 

@@ -23,20 +23,19 @@ public class ProductSpecification implements Specification<Product> {
 
     @Override
     public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-
         for (Criteria criteria : criteriaList) {
             PredicateStrategy strategy = criteria.getStrategy();
             switch (criteria.getOperation()) {
                 case LIKE -> predicates.add(strategy.getLikePattern(root.get(criteria.getField()),
                         criteria.getValue(),
                         criteriaBuilder));
-                case EQUAL ->  predicates.add(strategy.getEqPattern(root.get(criteria.getField()),
+                case EQUAL -> predicates.add(strategy.getEqPattern(root.get(criteria.getField()),
                         criteria.getValue(),
                         criteriaBuilder));
-                case LESS_THAN_OR_EQ ->  predicates.add(strategy.getEndPattern(root.get(criteria.getField()),
+                case LESS_THAN_OR_EQ -> predicates.add(strategy.getEndPattern(root.get(criteria.getField()),
                         criteria.getValue(),
                         criteriaBuilder));
-                case GRATER_THAN_OR_EQ ->  predicates.add(strategy.getBeginningPattern(root.get(criteria.getField()),
+                case GRATER_THAN_OR_EQ -> predicates.add(strategy.getBeginningPattern(root.get(criteria.getField()),
                         criteria.getValue(),
                         criteriaBuilder));
             }

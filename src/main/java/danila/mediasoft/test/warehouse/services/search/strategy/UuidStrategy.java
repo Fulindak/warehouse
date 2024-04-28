@@ -6,7 +6,7 @@ import jakarta.persistence.criteria.Predicate;
 
 import java.util.UUID;
 
-public class UuidStrategy implements PredicateStrategy<UUID>{
+public class UuidStrategy implements PredicateStrategy<UUID> {
     @Override
     public Predicate getEqPattern(Expression<UUID> expression, UUID value, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.equal(expression, value);

@@ -23,7 +23,6 @@ import java.util.UUID;
 @RequestMapping("products")
 @Slf4j
 public class ProductController {
-
     private final ProductService productService;
     private final ConversionService conversionService;
 
@@ -92,6 +91,6 @@ public class ProductController {
 
     @GetMapping("/insert")
     public void insertDemoValue(@RequestParam(required = false, defaultValue = "100") int size) {
-       productService.insertDemoValue(size);
+        productService.insertDemoValue(size);
     }
 }
