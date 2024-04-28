@@ -15,7 +15,7 @@ import java.util.List;
 public class ProductSpecification implements Specification<Product> {
     private List<Criteria> criteriaList;
     private List<Predicate> predicates;
-     private PredicateStrategy strategy;
+    private PredicateStrategy strategy;
 
     public ProductSpecification(List<Criteria> criteria) {
         this.predicates = new ArrayList<>();
