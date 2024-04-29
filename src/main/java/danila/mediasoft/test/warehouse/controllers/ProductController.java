@@ -20,7 +20,6 @@ import java.util.UUID;
 @RequestMapping("products")
 @Slf4j
 public class ProductController {
-
     private final ProductService productService;
     private final ConversionService conversionService;
 
@@ -78,5 +77,9 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+    @DeleteMapping("/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteProduct(@PathVariable UUID productId) {
+        productService.deleteProductById(productId);
+    }
 }

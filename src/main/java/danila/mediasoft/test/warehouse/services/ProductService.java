@@ -2,7 +2,6 @@ package danila.mediasoft.test.warehouse.services;
 
 import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
-import danila.mediasoft.test.warehouse.dto.product.UpdateProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.entities.ProductType;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
@@ -12,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +38,7 @@ public class ProductService {
                 .name(productDTO.getName())
                 .productTypes(new ArrayList<>())
                 .build();
-        for(Long i : productDTO.getTypes()) {
+        for (Long i : productDTO.getTypes()) {
             ProductType productType = productTypeService.getById(i);
             product.addType(productType);
         }
@@ -58,7 +56,6 @@ public class ProductService {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException("Product not found");
         }
-
         log.info("Start update product by id :" + productId);
         productRepository.updateQuantity(productId, newQuantity);
         log.info("Update  success");
@@ -70,7 +67,6 @@ public class ProductService {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException("Product not found");
         }
-
         log.info("Start update product by id :" + productId);
         productRepository.updatePrice(productId, newPrice);
         log.info("Update  success");
@@ -111,9 +107,11 @@ public class ProductService {
         productDTO.getTypes().stream()
                 .map(type -> productTypeService.getById(type.getId()))
                 .forEach(product::addType);
-
         return getProductDTO(productRepository.save(product));
     }
 
+    public void deleteProductById(UUID productId) {
+        productRepository.delete(getProductAndTypes(productId));
+    }
 }
 
