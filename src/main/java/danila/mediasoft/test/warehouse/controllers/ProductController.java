@@ -72,7 +72,7 @@ public class ProductController {
     }
 
     @PostMapping("/{productId}/quantity")
-    public ResponseEntity<ResponseStatus> updatePrice(@PathVariable UUID productId, @Validated @RequestBody UpdateQuantityDTO quantityDTO) {
+    public ResponseEntity<ResponseStatus> updateQuantity(@PathVariable UUID productId, @Validated @RequestBody UpdateQuantityDTO quantityDTO) {
         productService.updateQuantity(productId, quantityDTO.getQuantity());
         return new ResponseEntity<>(HttpStatus.OK);
     }
