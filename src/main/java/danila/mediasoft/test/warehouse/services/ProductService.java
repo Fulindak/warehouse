@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -104,6 +105,10 @@ public class ProductService {
 
     @Transactional
     public ProductDTO updateProduct(UUID productId, ProductDTO productDTO) {
+        Optional<Product> article = productRepository.findByArticle(productDTO.getArticle());
+        if (article.isPresent() && !article.get().getId().equals(productId)) {
+            throw new ValueAlreadyExistsException("Product by article: " + article.get().getArticle() + " already exist");
+        }
         Product product = getProductAndTypes(productId);
         product.setProductTypes(new ArrayList<>());
         product.setPrice(productDTO.getPrice());
@@ -141,6 +146,9 @@ public class ProductService {
                                         .build())
                 .toList();
         productRepository.saveAll(products);
+    }
+    public void deleteProductById(UUID productId) {
+        productRepository.delete(getProductAndTypes(productId));
     }
 }
 
