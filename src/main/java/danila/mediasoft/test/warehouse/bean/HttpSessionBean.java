@@ -9,5 +9,5 @@ import org.springframework.web.context.annotation.SessionScope;
 @SessionScope
 @Component
 public class HttpSessionBean {
-    private CurrencyType currency;
+    private CurrencyType currency = CurrencyType.RUB;
 }
