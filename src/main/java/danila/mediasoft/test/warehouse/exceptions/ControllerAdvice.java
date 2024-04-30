@@ -24,12 +24,24 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
-        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+        return new ErrorResponse("e.getMessage()", "e.getClass().getSimpleName()", "e.getStackTrace()[0].getClassName()");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIncorrectDataType(HttpMessageNotReadableException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
+    @ExceptionHandler(IllegalCurrencyTypeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalCurrencyType(IllegalCurrencyTypeException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
+    @ExceptionHandler(CurrencyFileWriteException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleIllegalCurrencyType(CurrencyFileWriteException e) {
         return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
     }
 }
