@@ -1,3 +1,9 @@
 spring:
   profiles:
     active: h2
+
+currency-service:
+  host: http://localhost:8081
+  filePath: exchange-rate.json
+  methods:
+    get-currency: /api/v1/currencies

@@ -4,6 +4,7 @@ spring:
     url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+
   jpa:
     show-sql: true
     properties:
@@ -11,17 +12,15 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
-  application:
-    name: warehouse
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+
 server:
   port: 8189
   servlet:
     context-path: /api/v0/
 
 application:
+  name: warehouse
   current-profile: docker
-
-
-
