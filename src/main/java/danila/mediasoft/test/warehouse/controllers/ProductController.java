@@ -42,11 +42,12 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ResponseStatus> createProduct(@Validated @RequestBody CreateProductDTO createProductDTO) {
+    public ResponseEntity<ProductCreatedResponseDTO> createProduct(@Validated @RequestBody CreateProductDTO createProductDTO) {
         log.info("Receive createProductDTO:" + createProductDTO);
-        productService.createProduct(createProductDTO);
-        log.info("Product create successfully");
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(ProductCreatedResponseDTO.builder()
+                .id(productService
+                        .createProduct(createProductDTO))
+                .build());
     }
 
     @DeleteMapping("/{productId}/type")
@@ -64,7 +65,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}")
-    private ResponseEntity<ProductResponse> updateProduct(@Validated @RequestBody UpdateProductDTO updateProductDTO, @PathVariable UUID productId) {
+    public ResponseEntity<ProductResponse> updateProduct(@Validated @RequestBody UpdateProductDTO updateProductDTO, @PathVariable UUID productId) {
         ProductDTO product = productService.updateProduct(productId,
                 (Objects.requireNonNull(conversionService.convert(updateProductDTO, ProductDTO.class))));
         return new ResponseEntity<>(conversionService.convert(productService.updateProduct(productId, product), ProductResponse.class),
