@@ -27,7 +27,7 @@ public class ProductService {
     private final ProductTypeService productTypeService;
     private final ConversionService conversionService;
 
-    public void createProduct(CreateProductDTO productDTO) {
+    public UUID createProduct(CreateProductDTO productDTO) {
         if (productRepository.findByArticle(productDTO.getArticle()).isPresent()) {
             log.info("Product with article: " + productDTO.getArticle() + " exist");
             throw new ValueAlreadyExistsException("Product by article '" + productDTO.getArticle() + "' already exist");
@@ -43,8 +43,7 @@ public class ProductService {
             ProductType productType = productTypeService.getById(i);
             product.addType(productType);
         }
-        productRepository.save(product);
-        log.info("Save product : " + product);
+        return productRepository.save(product).getId();
     }
 
     public List<ProductDTO> getProducts(PageRequest pageRequest) {
