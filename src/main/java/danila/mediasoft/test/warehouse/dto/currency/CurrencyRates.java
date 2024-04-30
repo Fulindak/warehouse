@@ -3,6 +3,7 @@ package danila.mediasoft.test.warehouse.dto.currency;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import danila.mediasoft.test.warehouse.enums.CurrencyType;
 import danila.mediasoft.test.warehouse.exceptions.IllegalCurrencyTypeException;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
+@Builder
 @Data
 public class CurrencyRates {
     private Map<String, BigDecimal> rates = new HashMap<>();
