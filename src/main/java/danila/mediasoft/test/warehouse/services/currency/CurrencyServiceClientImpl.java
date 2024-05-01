@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @CacheConfig(cacheNames = "currencyRates")
@@ -76,7 +77,7 @@ public class CurrencyServiceClientImpl implements CurrencyServiceClient {
     }
 
     @CacheEvict(allEntries = true, cacheNames = "currencyRates")
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     public void cacheEvict() {
         // TODO document why this method is empty
     }
