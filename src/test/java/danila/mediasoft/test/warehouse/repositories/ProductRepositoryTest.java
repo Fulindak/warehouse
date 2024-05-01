@@ -32,9 +32,9 @@ class ProductRepositoryTest {
     final String fieldQuantity = "quantity";
     final String fieldCreateAt = "createAt";
     final String fieldPrice = "price";
-    private final Integer dbSize = 10;
-
-    PageRequest page = PageRequest.of(0, 5);
+    private final Integer dbSize = 100;
+    private final Integer pageSize = 50;
+    PageRequest page = PageRequest.of(0, pageSize);
 
     @BeforeEach
     void setUp() {
@@ -70,11 +70,9 @@ class ProductRepositoryTest {
                         .operation(Operation.LIKE)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
-        assertThat(products).hasSize(dbSize);
+        assertThat(products).hasSize(pageSize);
     }
 
     @Test
@@ -86,11 +84,9 @@ class ProductRepositoryTest {
                         .operation(Operation.EQUAL)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         List<Product> products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
-        assertThat(products).hasSize(dbSize);
+        assertThat(products).hasSize(pageSize);
     }
 
     @Test
@@ -102,11 +98,9 @@ class ProductRepositoryTest {
                         .operation(Operation.GRATER_THAN_OR_EQ)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
-        assertThat(products).hasSize(dbSize);
+        assertThat(products).hasSize(pageSize);
     }
 
     @Test
@@ -118,11 +112,9 @@ class ProductRepositoryTest {
                         .operation(Operation.LESS_THAN_OR_EQ)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
-        assertThat(products).hasSize(dbSize);
+        assertThat(products).hasSize(pageSize);
     }
 
     @Test
@@ -134,10 +126,8 @@ class ProductRepositoryTest {
                         .operation(Operation.LIKE)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
         assertThat(products).hasSize(1);
     }
 
@@ -150,10 +140,8 @@ class ProductRepositoryTest {
                         .operation(Operation.EQUAL)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
         assertThat(products).hasSize(1);
     }
 
@@ -166,10 +154,8 @@ class ProductRepositoryTest {
                         .operation(Operation.EQUAL)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
         assertThat(products).hasSize(1);
     }
 
@@ -182,10 +168,8 @@ class ProductRepositoryTest {
                         .operation(Operation.LESS_THAN_OR_EQ)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
         assertThat(products).hasSize(50);
     }
 
@@ -208,10 +192,8 @@ class ProductRepositoryTest {
                         .operation(Operation.LESS_THAN_OR_EQ)
                         .build()
         );
-
         ProductSpecification productSpecification = new ProductSpecification(criteria);
         var products = productRepositoryUnderTest.findAll(productSpecification, page).getContent();
-
         assertThat(products).hasSize(16);
     }
 }
