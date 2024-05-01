@@ -1,9 +1,7 @@
 package danila.mediasoft.test.warehouse.services.currency;
 
-import danila.mediasoft.test.warehouse.enums.CurrencyType;
-
-import java.math.BigDecimal;
+import danila.mediasoft.test.warehouse.dto.currency.CurrencyRates;
 
 public interface CurrencyServiceClient {
-    BigDecimal getExchangeRate(CurrencyType currencyType);
+    CurrencyRates getCurrencyRates();
 }

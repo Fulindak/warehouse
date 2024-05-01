@@ -1,7 +1,6 @@
 package danila.mediasoft.test.warehouse.services.currency;
 
 import danila.mediasoft.test.warehouse.dto.currency.CurrencyRates;
-import danila.mediasoft.test.warehouse.enums.CurrencyType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +26,16 @@ public class CurrencyServiceMock implements CurrencyServiceClient {
         return randomBigDecimal.setScale(2, RoundingMode.HALF_UP);
     }
 
-    @Override
-    public BigDecimal getExchangeRate(CurrencyType currencyType) {
-        return currencyRates.getRateByCurrencyType(currencyType);
-    }
-
     private Map<String, BigDecimal> generateRandomRates() {
         Map<String, BigDecimal> rates = new HashMap<>();
         rates.put("CNY", generateRandomBigDecimal(new BigDecimal("20")));
         rates.put("USD", generateRandomBigDecimal(new BigDecimal("200")));
         rates.put("EUR", generateRandomBigDecimal(new BigDecimal("150")));
         return rates;
+    }
+
+    @Override
+    public CurrencyRates getCurrencyRates() {
+        return currencyRates;
     }
 }

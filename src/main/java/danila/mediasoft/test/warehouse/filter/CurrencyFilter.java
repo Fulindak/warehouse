@@ -1,6 +1,6 @@
 package danila.mediasoft.test.warehouse.filter;
 
-import danila.mediasoft.test.warehouse.bean.CurrencyProvider;
+import danila.mediasoft.test.warehouse.services.currency.provider.CurrencyProvider;
 import danila.mediasoft.test.warehouse.enums.CurrencyType;
 import danila.mediasoft.test.warehouse.exceptions.IllegalCurrencyTypeException;
 import io.micrometer.common.util.StringUtils;

@@ -1,4 +1,4 @@
-package danila.mediasoft.test.warehouse.bean;
+package danila.mediasoft.test.warehouse.services.currency.provider;
 
 import danila.mediasoft.test.warehouse.enums.CurrencyType;
 import lombok.Data;
