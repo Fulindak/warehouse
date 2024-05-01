@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-@ConditionalOnProperty(prefix = "currency-service", name = "mock", havingValue = "true")
+@ConditionalOnProperty(prefix = "rest.currency-service", name = "mock", havingValue = "true")
 public class CurrencyServiceMock implements CurrencyServiceClient {
     private final CurrencyRates currencyRates;
 

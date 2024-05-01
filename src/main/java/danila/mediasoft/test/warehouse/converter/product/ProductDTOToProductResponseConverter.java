@@ -1,6 +1,6 @@
 package danila.mediasoft.test.warehouse.converter.product;
 
-import danila.mediasoft.test.warehouse.bean.HttpSessionBean;
+import danila.mediasoft.test.warehouse.bean.CurrencyProvider;
 import danila.mediasoft.test.warehouse.converter.producttype.ProductTypeDTOToProductResponseConverter;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductResponse;
@@ -17,12 +17,12 @@ import java.math.BigDecimal;
 public class ProductDTOToProductResponseConverter implements Converter<ProductDTO, ProductResponse> {
 
     private final ProductTypeDTOToProductResponseConverter productResponseConverter;
-    private final HttpSessionBean httpSessionBean;
+    private final CurrencyProvider currencyProvider;
     private final CurrencyServiceClient currencyServiceClient;
     @Override
     public ProductResponse convert(ProductDTO productDTO) {
         BigDecimal price = productDTO.getPrice();
-        CurrencyType currencyType = httpSessionBean.getCurrency();
+        CurrencyType currencyType = currencyProvider.getCurrency();
         price =  currencyType != CurrencyType.RUB ?
                 price.multiply(currencyServiceClient.getExchangeRate(currencyType)) :
                 price;

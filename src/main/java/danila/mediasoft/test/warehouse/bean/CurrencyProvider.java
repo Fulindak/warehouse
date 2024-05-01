@@ -8,6 +8,6 @@ import org.springframework.web.context.annotation.SessionScope;
 @Data
 @SessionScope
 @Component
-public class HttpSessionBean {
+public class CurrencyProvider {
     private CurrencyType currency = CurrencyType.RUB;
 }

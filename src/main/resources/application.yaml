@@ -1,9 +1,10 @@
-currency-service:
-  host: http://localhost:8081
-  filePath: exchange-rate.json
-  mock: true
-  methods:
-    get-currency: /api/v1/currencies
+rest:
+  currency-service:
+    host: http://localhost:8081
+    filePath: exchange-rate.json
+    mock: false
+    methods:
+      get-currency: /api/v1/currencies
 
 spring:
   profiles:
