@@ -32,18 +32,20 @@ public class CurrencyServiceClientImpl implements CurrencyServiceClient {
     @Override
     @Cacheable(cacheNames = "currencyRates", key = "#root.methodName", unless = "#result == null")
     public CurrencyRates getCurrencyRates() {
-        return CurrencyRates.builder()
-                .rates(webClient
-                        .get()
-                        .uri(properties.methods().getCurrency())
-                        .retrieve()
-                        .bodyToMono(new ParameterizedTypeReference<Map<String, BigDecimal>>() {
-                        })
-                        .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)))
-                        .onErrorResume(ex -> {
-                            log.error(ex.getMessage());
-                            return Mono.empty();
-                        }).block()).build();
+        return webClient
+                .get()
+                .uri(properties.methods().getCurrency())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<String, BigDecimal>>() {
+                })
+                .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)))
+                .onErrorResume(ex -> {
+                    log.error(ex.getMessage());
+                    return Mono.empty();
+                })
+                .blockOptional()
+                .map(ratesMap -> CurrencyRates.builder().rates(ratesMap).build())
+                .orElseThrow(null);
     }
 
     @CacheEvict(allEntries = true, cacheNames = "currencyRates")

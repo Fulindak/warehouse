@@ -1,9 +1,7 @@
 package danila.mediasoft.test.warehouse.filter;
 
-import danila.mediasoft.test.warehouse.services.currency.provider.CurrencyProvider;
 import danila.mediasoft.test.warehouse.enums.CurrencyType;
-import danila.mediasoft.test.warehouse.exceptions.IllegalCurrencyTypeException;
-import io.micrometer.common.util.StringUtils;
+import danila.mediasoft.test.warehouse.services.currency.provider.CurrencyProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,13 +21,9 @@ public class CurrencyFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String currency = request.getHeader("currency");
-        try {
-            if (StringUtils.isNotBlank(currency)) {
-                currencyProvider.setCurrency(CurrencyType.formValue(currency));
-            }
-            filterChain.doFilter(request, response);
-        } catch (IllegalCurrencyTypeException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "This operation is not supported: " + currency);
-        }
+        Optional.ofNullable(currency)
+                .map(CurrencyType::formValue)
+                .ifPresent(currencyProvider::setCurrency);
+        filterChain.doFilter(request, response);
     }
 }
