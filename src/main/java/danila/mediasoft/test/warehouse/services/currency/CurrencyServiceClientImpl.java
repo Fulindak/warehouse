@@ -37,25 +37,13 @@ public class CurrencyServiceClientImpl implements CurrencyServiceClient {
                         .get()
                         .uri(properties.methods().getCurrency())
                         .retrieve()
-                        .bodyToMono(new ParameterizedTypeReference<Map<String, BigDecimal>>(){})
+                        .bodyToMono(new ParameterizedTypeReference<Map<String, BigDecimal>>() {
+                        })
                         .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)))
                         .onErrorResume(ex -> {
                             log.error(ex.getMessage());
                             return Mono.empty();
                         }).block()).build();
-    }
-
-    public String test() {
-        return webClient
-                .get()
-                .uri(properties.methods().getCurrency())
-                .retrieve()
-                .bodyToMono(String.class)
-                .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)))
-                .onErrorResume(ex -> {
-                    log.error(ex.getMessage());
-                    return Mono.empty();
-                }).block();
     }
 
     @CacheEvict(allEntries = true, cacheNames = "currencyRates")
