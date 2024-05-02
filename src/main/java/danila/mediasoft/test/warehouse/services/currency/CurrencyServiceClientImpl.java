@@ -45,7 +45,7 @@ public class CurrencyServiceClientImpl implements CurrencyServiceClient {
                 })
                 .blockOptional()
                 .map(ratesMap -> CurrencyRates.builder().rates(ratesMap).build())
-                .orElseThrow(null);
+                .orElse(null);
     }
 
     @CacheEvict(allEntries = true, cacheNames = "currencyRates")

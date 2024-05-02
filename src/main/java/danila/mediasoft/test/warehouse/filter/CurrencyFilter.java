@@ -22,7 +22,7 @@ public class CurrencyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String currency = request.getHeader("currency");
         Optional.ofNullable(currency)
-                .map(CurrencyType::formValue)
+                .map(CurrencyType::fromValue)
                 .ifPresent(currencyProvider::setCurrency);
         filterChain.doFilter(request, response);
     }
