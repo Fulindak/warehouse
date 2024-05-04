@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -29,4 +30,6 @@ public class Order {
     private Status status;
     @Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    private Set<OrderProduct> products;
 }

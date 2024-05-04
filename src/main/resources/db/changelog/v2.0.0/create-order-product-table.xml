@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-order-product" author="danila">
+        <createTable tableName="order_product">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="uuid">
+                    <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="numeric(19,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-fk-order-product-product" author="danila">
+        <addForeignKeyConstraint baseTableName="order_product" baseColumnNames="product_id"
+                                 constraintName="product_id"
+                                 referencedTableName="product" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create-fk-order-product-order" author="danila">
+        <addForeignKeyConstraint baseTableName="order_product" baseColumnNames="order_id"
+                                 constraintName="order_id"
+                                 referencedTableName="order" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet  author="danila"  id="order_product_seq">
+        <createSequence  catalogName="warehouse"
+                         dataType="bigint"
+                         incrementBy="20"
+                         schemaName="public"
+                         sequenceName="order_product_seq"
+                         startValue="1"/>
+    </changeSet>
+</databaseChangeLog>

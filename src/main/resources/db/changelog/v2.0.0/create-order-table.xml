@@ -20,7 +20,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="create-fk-customer" author="danila">
+    <changeSet id="create-fk-order-customer" author="danila">
         <addForeignKeyConstraint baseTableName="order" baseColumnNames="customer_id"
                                  constraintName="customer_id"
                                  referencedTableName="customer" referencedColumnNames="id"/>
