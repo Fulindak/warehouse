@@ -35,8 +35,8 @@
                                  referencedTableName="product_type" referencedColumnNames="id"/>
     </changeSet>
     <changeSet  author="danila"  id="product_type_seq">
-        <createSequence  catalogName="home-manager"
-                         dataType="int"
+        <createSequence  catalogName="warehouse"
+                         dataType="bigint"
                          incrementBy="20"
                          schemaName="public"
                          sequenceName="product_type_seq"
