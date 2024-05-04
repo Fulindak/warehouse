@@ -2,6 +2,7 @@ package danila.mediasoft.test.warehouse.services.currency;
 
 import danila.mediasoft.test.warehouse.dto.currency.CurrencyRates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.util.Random;
 
 @Service
 @ConditionalOnProperty(prefix = "rest.currency-service", name = "mock", havingValue = "true")
+@Primary
 public class CurrencyServiceMock implements CurrencyServiceClient {
     private final CurrencyRates currencyRates;
 

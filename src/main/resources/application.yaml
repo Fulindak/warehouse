@@ -9,3 +9,7 @@ rest:
 spring:
   profiles:
     active: h2
+  cache:
+    cache-names: currencyRates
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=60s
