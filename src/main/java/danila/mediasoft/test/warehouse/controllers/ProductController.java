@@ -2,10 +2,13 @@ package danila.mediasoft.test.warehouse.controllers;
 
 import danila.mediasoft.test.warehouse.dto.product.*;
 import danila.mediasoft.test.warehouse.services.ProductService;
+import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -77,6 +80,19 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchByCriteria(Pageable pageable,
+                                                                  @Valid @RequestBody List<Criteria> criteriaList) {
+        List<ProductDTO> productDTOList = productService.search(criteriaList, pageable);
+        return ResponseEntity.ok(productDTOList.stream()
+                .map(productDTO ->
+                        conversionService.convert(productDTO, ProductResponse.class)).toList());
+    }
+
+    @GetMapping("/insert")
+    public void insertDemoValue(@RequestParam(required = false, defaultValue = "100") int size) {
+        productService.insertDemoValue(size);
+    }
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable UUID productId) {
