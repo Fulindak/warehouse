@@ -45,6 +45,8 @@ public class Product {
     @CreationTimestamp
     @Column(name = "create_at")
     private LocalDate createAt;
+    @Column(name = "is_available")
+    private Boolean isAvailable;
 
     public void addType(ProductType type) {
         productTypes.add(type);
