@@ -32,4 +32,12 @@ public class Order {
     private String deliveryAddress;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
     private Set<OrderProduct> products;
+
+    public void addProduct(OrderProduct product) {
+        products.add(product);
+    }
+
+    public void removeProduct(OrderProduct product) {
+        products.remove(product);
+    }
 }
