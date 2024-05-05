@@ -18,12 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Service
 @Slf4j
@@ -59,9 +57,10 @@ public class ProductService {
         return products.stream().map(product -> conversionService.convert(product, ProductDTO.class)).toList();
     }
 
-    @Transactional
     public void updateQuantity(UUID productId, Long newQuantity) {
-        productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
+        if (productRepository.findById(productId).isEmpty()) {
+            throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
+        }
         if (newQuantity < 0) {
             throw new InvalidValueException("Quantity cannot be equal: " + newQuantity);
         }
@@ -71,7 +70,6 @@ public class ProductService {
 
     }
 
-    @Transactional
     public void updatePrice(UUID productId, Long newPrice) {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
@@ -130,24 +128,6 @@ public class ProductService {
         return products.stream()
                 .map(product ->
                         conversionService.convert(product, ProductDTO.class)).toList();
-    }
-
-    @Transactional
-    public void insertDemoValue(int size) {
-        productRepository.deleteAll();
-        var products = IntStream.range(0, size)
-                .mapToObj(
-                        index ->
-                                Product.builder()
-                                        .price(BigDecimal.valueOf(index + 50))
-                                        .article("article_" + index)
-                                        .name("product_" + index)
-                                        .id(UUID.randomUUID())
-                                        .quantity((long) index)
-                                        .productTypes(new ArrayList<>())
-                                        .build())
-                .toList();
-        productRepository.saveAll(products);
     }
 
     public void deleteProductById(UUID productId) {
