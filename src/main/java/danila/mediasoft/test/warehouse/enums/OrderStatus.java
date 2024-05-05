@@ -1,5 +1,5 @@
 package danila.mediasoft.test.warehouse.enums;
 
-public enum Status {
+public enum OrderStatus {
     CREATED, CONFIRMED, CANCELLED, DONE, REJECTED;
 }

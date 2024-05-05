@@ -1,9 +1,11 @@
 package danila.mediasoft.test.warehouse.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import danila.mediasoft.test.warehouse.enums.Status;
+import danila.mediasoft.test.warehouse.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Set;
@@ -27,10 +29,11 @@ public class Order {
     private Customer customer;
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private OrderStatus orderStatus;
     @Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(mappedBy = "order")
+    @Fetch(FetchMode.JOIN)
     private Set<OrderProduct> products;
 
     public void addProduct(OrderProduct product) {

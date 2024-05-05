@@ -2,6 +2,8 @@ package danila.mediasoft.test.warehouse.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Set;
 
@@ -26,7 +28,8 @@ public class Customer {
     private String email;
     @Column(name = "is_active")
     private Boolean isActive;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(mappedBy = "customer")
+    @Fetch(FetchMode.JOIN)
     private Set<Order> orders;
 
     public void addOrder(Order order) {

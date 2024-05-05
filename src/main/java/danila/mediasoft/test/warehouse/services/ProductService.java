@@ -4,6 +4,7 @@ import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.entities.ProductType;
+import danila.mediasoft.test.warehouse.exceptions.InvalidValueException;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
@@ -60,8 +61,9 @@ public class ProductService {
 
     @Transactional
     public void updateQuantity(UUID productId, Long newQuantity) {
-        if (productRepository.findById(productId).isEmpty()) {
-            throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
+        productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
+        if (newQuantity < 0) {
+            throw new InvalidValueException("Quantity cannot be equal: " + newQuantity);
         }
         log.info("Start update product by id :" + productId);
         productRepository.updateQuantity(productId, newQuantity);
@@ -147,6 +149,7 @@ public class ProductService {
                 .toList();
         productRepository.saveAll(products);
     }
+
     public void deleteProductById(UUID productId) {
         productRepository.delete(getProductAndTypes(productId));
     }
