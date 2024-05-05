@@ -67,7 +67,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}")
-    private ResponseEntity<ProductResponse> updateProduct(@Validated @RequestBody UpdateProductDTO updateProductDTO, @PathVariable UUID productId) {
+    public ResponseEntity<ProductResponse> updateProduct(@Validated @RequestBody UpdateProductDTO updateProductDTO, @PathVariable UUID productId) {
         ProductDTO product = productService.updateProduct(productId,
                 (Objects.requireNonNull(conversionService.convert(updateProductDTO, ProductDTO.class))));
         return new ResponseEntity<>(conversionService.convert(productService.updateProduct(productId, product), ProductResponse.class),
@@ -89,10 +89,6 @@ public class ProductController {
                         conversionService.convert(productDTO, ProductResponse.class)).toList());
     }
 
-    @GetMapping("/insert")
-    public void insertDemoValue(@RequestParam(required = false, defaultValue = "100") int size) {
-        productService.insertDemoValue(size);
-    }
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable UUID productId) {

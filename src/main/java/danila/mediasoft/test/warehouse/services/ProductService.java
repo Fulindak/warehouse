@@ -70,15 +70,6 @@ public class ProductService {
 
     }
 
-    public void updatePrice(UUID productId, Long newPrice) {
-        if (productRepository.findById(productId).isEmpty()) {
-            throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
-        }
-        log.info("Start update product by id :" + productId);
-        productRepository.updatePrice(productId, newPrice);
-        log.info("Update  success");
-    }
-
     public ProductDTO addTypeFromId(UUID productId, Long typeId) {
         Product product = getProductAndTypes(productId);
         product.addType(productTypeService.getById(typeId));
