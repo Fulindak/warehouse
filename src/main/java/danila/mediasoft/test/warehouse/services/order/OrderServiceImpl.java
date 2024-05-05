@@ -56,5 +56,4 @@ public class OrderServiceImpl implements OrderService {
         productService.updateQuantity(product.getId(), product.getQuantity() - quantity);
         return quantity;
     }
-
 }
