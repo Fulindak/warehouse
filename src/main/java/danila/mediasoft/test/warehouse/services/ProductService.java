@@ -17,12 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Service
 @Slf4j
@@ -66,15 +64,6 @@ public class ProductService {
         productRepository.updateQuantity(productId, newQuantity);
         log.info("Update  success");
 
-    }
-
-    public void updatePrice(UUID productId, Long newPrice) {
-        if (productRepository.findById(productId).isEmpty()) {
-            throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
-        }
-        log.info("Start update product by id :" + productId);
-        productRepository.updatePrice(productId, newPrice);
-        log.info("Update  success");
     }
 
     public ProductDTO addTypeFromId(UUID productId, Long typeId) {
