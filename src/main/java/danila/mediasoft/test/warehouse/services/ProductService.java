@@ -58,7 +58,6 @@ public class ProductService {
         return products.stream().map(product -> conversionService.convert(product, ProductDTO.class)).toList();
     }
 
-    @Transactional
     public void updateQuantity(UUID productId, Long newQuantity) {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
@@ -69,7 +68,6 @@ public class ProductService {
 
     }
 
-    @Transactional
     public void updatePrice(UUID productId, Long newPrice) {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
@@ -130,23 +128,6 @@ public class ProductService {
                         conversionService.convert(product, ProductDTO.class)).toList();
     }
 
-    @Transactional
-    public void insertDemoValue(int size) {
-        productRepository.deleteAll();
-        var products = IntStream.range(0, size)
-                .mapToObj(
-                        index ->
-                                Product.builder()
-                                        .price(BigDecimal.valueOf(index + 50))
-                                        .article("article_" + index)
-                                        .name("product_" + index)
-                                        .id(UUID.randomUUID())
-                                        .quantity((long) index)
-                                        .productTypes(new ArrayList<>())
-                                        .build())
-                .toList();
-        productRepository.saveAll(products);
-    }
     public void deleteProductById(UUID productId) {
         productRepository.delete(getProductAndTypes(productId));
     }
