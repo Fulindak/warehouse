@@ -6,14 +6,11 @@
 
     <changeSet id="create-table-order-product" author="danila">
         <createTable tableName="order_product">
-            <column name="id" type="bigint" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
             <column name="product_id" type="uuid">
-                    <constraints nullable="false"/>
+                    <constraints nullable="false" primaryKey="true" primaryKeyName="pk_order_product"/>
             </column>
             <column name="order_id" type="uuid">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_order_product"/>
             </column>
             <column name="quantity" type="bigint">
                 <constraints nullable="false"/>
@@ -30,18 +27,9 @@
                                  referencedTableName="product" referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="create-fk-order-product-order" author="danila">
+    <changeSet id="create-fk-order-product-orders" author="danila">
         <addForeignKeyConstraint baseTableName="order_product" baseColumnNames="order_id"
                                  constraintName="order_id"
-                                 referencedTableName="order" referencedColumnNames="id"/>
-    </changeSet>
-
-    <changeSet  author="danila"  id="order_product_seq">
-        <createSequence  catalogName="warehouse"
-                         dataType="bigint"
-                         incrementBy="20"
-                         schemaName="public"
-                         sequenceName="order_product_seq"
-                         startValue="1"/>
+                                 referencedTableName="orders" referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

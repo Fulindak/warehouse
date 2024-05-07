@@ -26,7 +26,7 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @Transactional
-    public void createOrder(CreateOrderRequest orderRequest) {
+    public void create(CreateOrderRequest orderRequest) {
         Set<Product> products = orderRequest.products()
                 .stream()
                 .map(product -> productService

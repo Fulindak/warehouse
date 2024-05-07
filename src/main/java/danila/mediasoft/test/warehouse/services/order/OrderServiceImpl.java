@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void createOrder(CreateOrderRequest orderRequest) {
+    public UUID create(CreateOrderRequest orderRequest) {
         Set<Product> products = orderRequest.products()
                 .stream()
                 .map(product -> productService
@@ -45,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
                 .customer(customerService.findById(customerProvider.getId()))
                 .orderStatus(OrderStatus.CREATED)
                 .build();
-        orderRepository.save(order);
+        return orderRepository.save(order).getId();
     }
 
     private Long checkQuantity(Product product, CreateOrderRequest orderRequest) {

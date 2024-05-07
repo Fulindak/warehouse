@@ -4,8 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <changeSet id="create-table-order" author="danila">
-        <createTable tableName="order">
+    <changeSet id="create-table-orders" author="danila">
+        <createTable tableName="orders">
             <column name="id" type="uuid">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -20,8 +20,8 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="create-fk-order-customer" author="danila">
-        <addForeignKeyConstraint baseTableName="order" baseColumnNames="customer_id"
+    <changeSet id="create-fk-orders-customer" author="danila">
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="customer_id"
                                  constraintName="customer_id"
                                  referencedTableName="customer" referencedColumnNames="id"/>
     </changeSet>

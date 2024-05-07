@@ -10,6 +10,6 @@
 
     <include file="update-product-table.xml" relativeToChangelogFile="true"/>
     <include file="create-customer-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-order-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-orders-table.xml" relativeToChangelogFile="true"/>
     <include file="create-order-product-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
