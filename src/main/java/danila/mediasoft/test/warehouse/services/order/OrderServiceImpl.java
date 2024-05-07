@@ -1,6 +1,9 @@
 package danila.mediasoft.test.warehouse.services.order;
 
 import danila.mediasoft.test.warehouse.dto.order.CreateOrderRequest;
+import danila.mediasoft.test.warehouse.dto.order.OrderDTO;
+import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
+import danila.mediasoft.test.warehouse.dto.orderproduct.UpdateOrderProductRequest;
 import danila.mediasoft.test.warehouse.entities.Order;
 import danila.mediasoft.test.warehouse.entities.OrderProduct;
 import danila.mediasoft.test.warehouse.entities.Product;
@@ -47,6 +50,25 @@ public class OrderServiceImpl implements OrderService {
                 .orderStatus(OrderStatus.CREATED)
                 .build();
         return orderRepository.save(order).getId();
+    }
+
+    @Override
+    public OrderDTO update(Set<UpdateOrderProductRequest> products, UUID id) {
+        return null;
+    }
+
+    @Override
+    public OrderDTO get(UUID id) {
+        return null;
+    }
+
+    @Override
+    public void delete(UUID id) {
+    }
+
+    @Override
+    public OrderDTO updateStatus(UpdateStatusRequest updateStatusRequest, UUID id) {
+        return null;
     }
 
     private Long checkQuantity(Product product, CreateOrderRequest orderRequest) {
