@@ -31,31 +31,31 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public ResponseEntity<OrderResponse> update(@Valid Set<OrderProductRequest> products, UUID id) {
-        OrderResponse orderResponse = conversionService.convert(orderService.update(products, id), OrderResponse.class);
+    public ResponseEntity<OrderResponse> update(@Valid Set<OrderProductRequest> products, UUID orderId) {
+        OrderResponse orderResponse = conversionService.convert(orderService.update(products, orderId), OrderResponse.class);
         return ResponseEntity.ok(orderResponse);
     }
 
     @Override
-    public ResponseEntity<OrderResponse> get(UUID id) {
-        OrderResponse orderResponse = conversionService.convert(orderService.get(id), OrderResponse.class);
+    public ResponseEntity<OrderResponse> get(UUID orderId) {
+        OrderResponse orderResponse = conversionService.convert(orderService.get(orderId), OrderResponse.class);
         return ResponseEntity.ok(orderResponse);
     }
 
     @Override
-    public void delete(UUID id) {
-        orderService.delete(id);
+    public void delete(UUID orderId) {
+        orderService.delete(orderId);
     }
 
     @Override
-    public ResponseEntity<OrderResponse> confirm(UUID id) {
+    public ResponseEntity<OrderResponse> confirm(UUID orderId) {
         return null;
     }
 
     @Override
-    public ResponseEntity<OrderResponse> updateStatus(UpdateStatusRequest updateStatusRequest, UUID id) {
+    public ResponseEntity<OrderResponse> updateStatus(UpdateStatusRequest updateStatusRequest, UUID orderId) {
         OrderResponse orderResponse = conversionService.convert(
-                orderService.updateStatus(updateStatusRequest, id),
+                orderService.updateStatus(updateStatusRequest, orderId),
                 OrderResponse.class);
         return ResponseEntity.ok(orderResponse);
     }

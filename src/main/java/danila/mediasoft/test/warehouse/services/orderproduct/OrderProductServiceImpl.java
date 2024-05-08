@@ -2,6 +2,7 @@ package danila.mediasoft.test.warehouse.services.orderproduct;
 
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductDTO;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
+import danila.mediasoft.test.warehouse.entities.Order;
 import danila.mediasoft.test.warehouse.entities.OrderProduct;
 import danila.mediasoft.test.warehouse.entities.OrderProductId;
 import danila.mediasoft.test.warehouse.entities.Product;
@@ -22,7 +23,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     private final OrderProductRepository orderProductRepository;
 
     @Override
-    public Set<OrderProduct> create(Set<OrderProductRequest> orderProductRequests) {
+    public Set<OrderProduct> create(Set<OrderProductRequest> orderProductRequests, Order order) {
         Set<Product> products = orderProductRequests
                 .stream()
                 .map(product -> productService
@@ -31,7 +32,11 @@ public class OrderProductServiceImpl implements OrderProductService {
         return products.stream()
                 .map(product ->
                         OrderProduct.builder()
+                                .id(OrderProductId.builder()
+                                        .productId(product.getId())
+                                        .orderId(order.getId()).build())
                                 .product(product)
+                                .order(order)
                                 .price(product.getPrice())
                                 .quantity(checkQuantity(product, orderProductRequests))
                                 .build())
@@ -39,9 +44,13 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public OrderProduct create(OrderProductRequest orderProductRequest) {
+    public OrderProduct create(OrderProductRequest orderProductRequest, Order order) {
         Product product = productService.getProductAndTypes(orderProductRequest.id());
         return OrderProduct.builder()
+                .id(OrderProductId.builder()
+                        .productId(product.getId())
+                        .orderId(order.getId()).build())
+                .order(order)
                 .product(product)
                 .quantity(checkQuantity(product, orderProductRequest))
                 .price(product.getPrice())
@@ -49,18 +58,18 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public Set<OrderProduct> update(Set<OrderProductRequest> orderProductRequests, UUID orderId) {
+    public Set<OrderProduct> update(Set<OrderProductRequest> orderProductRequests, Order order) {
         return orderProductRequests
                 .stream()
-                .map(product -> update(product, orderId)).collect(Collectors.toSet());
+                .map(product -> update(product, order)).collect(Collectors.toSet());
     }
 
     @Override
-    public OrderProduct update(OrderProductRequest orderProductRequests, UUID orderId) {
+    public OrderProduct update(OrderProductRequest orderProductRequests, Order order) {
         OrderProduct product = getById(OrderProductId.builder()
-                .orderId(orderId)
+                .orderId(order.getId())
                 .productId(orderProductRequests.id())
-                .build()).orElseGet(() -> create(orderProductRequests));
+                .build()).orElseGet(() -> create(orderProductRequests, order));
         product.setQuantity(product.getQuantity() + checkQuantity(product.getProduct(), orderProductRequests));
         product.setPrice(product.getProduct().getPrice());
         return product;

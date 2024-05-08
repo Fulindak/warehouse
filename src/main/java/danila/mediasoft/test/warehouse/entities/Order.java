@@ -33,15 +33,12 @@ public class Order {
     private OrderStatus orderStatus;
     @Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @Fetch(FetchMode.JOIN)
     private Set<OrderProduct> products = new HashSet<>();
 
     public void addProduct(Set<OrderProduct> orderProducts) {
-        orderProducts.forEach(product -> {
-            product.setOrder(this);
-            products.add(product);
-        });
+        products.addAll(orderProducts);
     }
 
     public void removeProduct(OrderProduct product) {

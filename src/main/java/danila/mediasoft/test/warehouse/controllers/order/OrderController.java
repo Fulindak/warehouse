@@ -19,18 +19,18 @@ public interface OrderController {
     ResponseEntity<CreateOrderResponse> create(@Valid @RequestBody CreateOrderRequest orderRequest);
 
     @PatchMapping("/{orderId}")
-    ResponseEntity<OrderResponse> update(@Valid @RequestBody Set<OrderProductRequest> products, @PathVariable UUID id);
+    ResponseEntity<OrderResponse> update(@Valid @RequestBody Set<OrderProductRequest> products, @PathVariable UUID orderId);
 
     @GetMapping("/{orderId}")
-    ResponseEntity<OrderResponse> get(@PathVariable UUID id);
+    ResponseEntity<OrderResponse> get(@PathVariable UUID orderId);
 
     @DeleteMapping("/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete(@PathVariable UUID id);
+    void delete(@PathVariable UUID orderId);
 
     @PostMapping("/{orderId}/confirm")
-    ResponseEntity<OrderResponse> confirm(@PathVariable UUID id);
+    ResponseEntity<OrderResponse> confirm(@PathVariable UUID orderId);
 
     @PatchMapping("/{orderId}/status")
-    ResponseEntity<OrderResponse> updateStatus(@Valid @RequestBody UpdateStatusRequest updateStatusRequest, @PathVariable UUID id);
+    ResponseEntity<OrderResponse> updateStatus(@Valid @RequestBody UpdateStatusRequest updateStatusRequest, @PathVariable UUID orderId);
 }

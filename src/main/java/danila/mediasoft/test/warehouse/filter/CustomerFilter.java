@@ -16,11 +16,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomerFilter extends OncePerRequestFilter {
     private final CustomerProvider customerProvider;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String customerId = request.getHeader("customerId");
         Optional.ofNullable(customerId)
                 .map(Long::valueOf)
                 .ifPresent(customerProvider::setId);
+        filterChain.doFilter(request, response);
     }
 }

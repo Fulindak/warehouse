@@ -37,10 +37,10 @@ public class OrderServiceImpl implements OrderService {
     public UUID create(CreateOrderRequest orderRequest) {
         Order order = Order.builder()
                 .deliveryAddress(orderRequest.deliveryAddress())
-                .products(orderProductService.create(orderRequest.products()))
                 .customer(customerService.findById(customerProvider.getId()))
                 .orderStatus(OrderStatus.CREATED)
                 .build();
+        order.setProducts(orderProductService.create(orderRequest.products(), order));
         return orderRepository.save(order).getId();
     }
 
@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO update(Set<OrderProductRequest> products, UUID id) {
         Order order = getVerifiedOrder(id);
-        order.addProduct(orderProductService.update(products, id));
+        order.addProduct(orderProductService.update(products, order));
         return conversionService.convert(order, OrderDTO.class);
     }
 
