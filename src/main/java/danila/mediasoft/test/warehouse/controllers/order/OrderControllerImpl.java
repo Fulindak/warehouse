@@ -4,7 +4,7 @@ import danila.mediasoft.test.warehouse.dto.order.CreateOrderRequest;
 import danila.mediasoft.test.warehouse.dto.order.CreateOrderResponse;
 import danila.mediasoft.test.warehouse.dto.order.OrderResponse;
 import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
-import danila.mediasoft.test.warehouse.dto.orderproduct.UpdateOrderProductRequest;
+import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
 import danila.mediasoft.test.warehouse.services.order.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public ResponseEntity<OrderResponse> update(@Valid Set<UpdateOrderProductRequest> products, UUID id) {
+    public ResponseEntity<OrderResponse> update(@Valid Set<OrderProductRequest> products, UUID id) {
         OrderResponse orderResponse = conversionService.convert(orderService.update(products, id), OrderResponse.class);
         return ResponseEntity.ok(orderResponse);
     }

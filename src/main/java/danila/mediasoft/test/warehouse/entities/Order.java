@@ -8,6 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,10 +35,13 @@ public class Order {
     private String deliveryAddress;
     @OneToMany(mappedBy = "order")
     @Fetch(FetchMode.JOIN)
-    private Set<OrderProduct> products;
+    private Set<OrderProduct> products = new HashSet<>();
 
-    public void addProduct(OrderProduct product) {
-        products.add(product);
+    public void addProduct(Set<OrderProduct> orderProducts) {
+        orderProducts.forEach(product -> {
+            product.setOrder(this);
+            products.add(product);
+        });
     }
 
     public void removeProduct(OrderProduct product) {

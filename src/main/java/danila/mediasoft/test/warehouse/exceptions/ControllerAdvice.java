@@ -38,4 +38,17 @@ public class ControllerAdvice {
     public ErrorResponse handleInvalidValue(InvalidValueException e) {
         return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(ForbiddenException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
+    @ExceptionHandler(InvalidStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidStatus(InvalidStatusException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
 }

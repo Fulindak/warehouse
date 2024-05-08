@@ -67,7 +67,6 @@ public class ProductService {
         log.info("Start update product by id :" + productId);
         productRepository.updateQuantity(productId, newQuantity);
         log.info("Update  success");
-
     }
 
     public ProductDTO addTypeFromId(UUID productId, Long typeId) {
