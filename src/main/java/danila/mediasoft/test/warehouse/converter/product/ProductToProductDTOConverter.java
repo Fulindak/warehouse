@@ -26,6 +26,7 @@ public class ProductToProductDTOConverter implements Converter<Product, ProductD
                 .article(product.getArticle())
                 .createAt(product.getCreateAt())
                 .updateAt(product.getUpdateAt())
+                .isAvailable(product.getIsAvailable())
                 .build();
     }
 }

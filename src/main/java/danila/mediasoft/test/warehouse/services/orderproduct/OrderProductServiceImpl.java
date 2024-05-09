@@ -6,6 +6,7 @@ import danila.mediasoft.test.warehouse.entities.Order;
 import danila.mediasoft.test.warehouse.entities.OrderProduct;
 import danila.mediasoft.test.warehouse.entities.OrderProductId;
 import danila.mediasoft.test.warehouse.entities.Product;
+import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.repositories.OrderProductRepository;
 import danila.mediasoft.test.warehouse.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -24,28 +25,17 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     public Set<OrderProduct> create(Set<OrderProductRequest> orderProductRequests, Order order) {
-        Set<Product> products = orderProductRequests
-                .stream()
-                .map(product -> productService
-                        .getProductAndTypes(product.id()))
-                .collect(Collectors.toSet());
-        return products.stream()
-                .map(product ->
-                        OrderProduct.builder()
-                                .id(OrderProductId.builder()
-                                        .productId(product.getId())
-                                        .orderId(order.getId()).build())
-                                .product(product)
-                                .order(order)
-                                .price(product.getPrice())
-                                .quantity(checkQuantity(product, orderProductRequests))
-                                .build())
+        return orderProductRequests.stream()
+                .map(product -> create(product, order))
                 .collect(Collectors.toSet());
     }
 
     @Override
     public OrderProduct create(OrderProductRequest orderProductRequest, Order order) {
         Product product = productService.getProductAndTypes(orderProductRequest.id());
+        if (product.getIsAvailable().equals(Boolean.FALSE)) {
+            throw new ResourceNotFoundException("Product by id: " + product.getId() + " not available");
+        }
         return OrderProduct.builder()
                 .id(OrderProductId.builder()
                         .productId(product.getId())
@@ -83,15 +73,6 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     public Optional<OrderProduct> getById(OrderProductId id) {
         return orderProductRepository.findById(id);
-    }
-
-    private Long checkQuantity(Product product, Set<OrderProductRequest> orderProductRequest) {
-        Long quantity = orderProductRequest
-                .stream()
-                .filter(p -> p.id().equals(product.getId()))
-                .findFirst().get().quantity();
-        productService.updateQuantity(product.getId(), product.getQuantity() - quantity);
-        return quantity;
     }
 
     private Long checkQuantity(Product product, OrderProductRequest orderProductRequest) {

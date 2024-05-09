@@ -43,6 +43,7 @@ public class ProductService {
                 .article(productDTO.getArticle())
                 .name(productDTO.getName())
                 .productTypes(new ArrayList<>())
+                .isAvailable(true)
                 .build();
         for (Long i : productDTO.getTypes()) {
             ProductType productType = productTypeService.getById(i);
@@ -121,7 +122,9 @@ public class ProductService {
     }
 
     public void deleteProductById(UUID productId) {
-        productRepository.delete(getProductAndTypes(productId));
+        Product product = getProductAndTypes(productId);
+        product.setIsAvailable(false);
+        productRepository.save(product);
     }
 }
 

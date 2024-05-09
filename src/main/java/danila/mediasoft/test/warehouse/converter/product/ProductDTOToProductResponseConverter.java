@@ -25,6 +25,7 @@ public class ProductDTOToProductResponseConverter implements Converter<ProductDT
                 .article(productDTO.getArticle())
                 .createAt(productDTO.getCreateAt())
                 .updateAt(productDTO.getUpdateAt())
+                .isAvailable(productDTO.getIsAvailable())
                 .build();
     }
 }

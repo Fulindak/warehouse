@@ -54,6 +54,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO get(UUID id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order by id: " + id + " not found"));
+        if (!order.getCustomer().getId().equals(customerProvider.getId())) {
+            throw new ForbiddenException("Customer id != Customer in order");
+        }
         Set<OrderProductDTO> products = orderProductService.getByOrderId(id);
         return OrderDTO.builder()
                 .orderId(id)

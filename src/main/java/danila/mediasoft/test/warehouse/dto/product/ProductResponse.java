@@ -20,4 +20,5 @@ public class ProductResponse {
     private Long quantity;
     private LocalDate createAt;
     private LocalDateTime updateAt;
+    private boolean isAvailable;
 }
