@@ -45,11 +45,12 @@ public class ProductController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ResponseStatus> createProduct(@Validated @RequestBody CreateProductDTO createProductDTO) {
+    public ResponseEntity<ProductCreatedResponseDTO> createProduct(@Validated @RequestBody CreateProductDTO createProductDTO) {
         log.info("Receive createProductDTO:" + createProductDTO);
-        productService.createProduct(createProductDTO);
-        log.info("Product create successfully");
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(ProductCreatedResponseDTO.builder()
+                .id(productService
+                        .createProduct(createProductDTO))
+                .build());
     }
 
     @DeleteMapping("/{productId}/type")

@@ -1,3 +1,15 @@
+rest:
+  currency-service:
+    host: http://localhost:8081
+    filePath: exchange-rate.json
+    mock: false
+    methods:
+      get-currency: /api/v1/currencies
+
 spring:
   profiles:
     active: h2
+  cache:
+    cache-names: currencyRates
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=60s
