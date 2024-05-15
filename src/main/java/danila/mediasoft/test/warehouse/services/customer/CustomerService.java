@@ -4,7 +4,7 @@ import danila.mediasoft.test.warehouse.dto.customer.CreateCustomerRequest;
 import danila.mediasoft.test.warehouse.entities.Customer;
 
 public interface CustomerService {
-    Customer findById(Long id);
+    Customer getCustomerById(Long id);
 
     Long create(CreateCustomerRequest customerRequest);
 }

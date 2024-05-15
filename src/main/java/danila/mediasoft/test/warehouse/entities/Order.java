@@ -1,11 +1,22 @@
 package danila.mediasoft.test.warehouse.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import danila.mediasoft.test.warehouse.enums.OrderStatus;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.HashSet;
@@ -26,22 +37,12 @@ public class Order {
     private UUID id;
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
-    @JsonIgnore
     private Customer customer;
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
     @Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    @Fetch(FetchMode.JOIN)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<OrderProduct> products = new HashSet<>();
-
-    public void addProduct(Set<OrderProduct> orderProducts) {
-        products.addAll(orderProducts);
-    }
-
-    public void removeProduct(OrderProduct product) {
-        products.remove(product);
-    }
 }

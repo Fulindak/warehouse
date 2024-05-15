@@ -7,7 +7,14 @@ import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Set;
 import java.util.UUID;
@@ -18,7 +25,8 @@ public interface OrderController {
     CreateOrderResponse create(@Valid @RequestBody CreateOrderRequest orderRequest);
 
     @PatchMapping("/{orderId}")
-    OrderResponse update(@Valid @RequestBody Set<OrderProductRequest> products, @PathVariable UUID orderId);
+    @ResponseStatus(HttpStatus.OK)
+    void update(@Valid @RequestBody Set<OrderProductRequest> products, @PathVariable UUID orderId);
 
     @GetMapping("/{orderId}")
     OrderResponse get(@PathVariable UUID orderId);

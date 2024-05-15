@@ -31,8 +31,8 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public OrderResponse update(@Valid Set<OrderProductRequest> products, UUID orderId) {
-        return conversionService.convert(orderService.update(products, orderId), OrderResponse.class);
+    public void update(@Valid Set<OrderProductRequest> products, UUID orderId) {
+        orderService.update(products, orderId);
     }
 
     @Override

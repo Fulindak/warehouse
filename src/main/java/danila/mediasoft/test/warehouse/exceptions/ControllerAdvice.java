@@ -21,6 +21,12 @@ public class ControllerAdvice {
         return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
     }
 
+    @ExceptionHandler(ResourceNotAvailableException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleResourceNotAvailable(ResourceNotAvailableException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {

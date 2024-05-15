@@ -12,6 +12,18 @@ import java.util.UUID;
 
 @Repository
 public interface OrderProductRepository extends JpaRepository<OrderProduct, OrderProductId> {
-    @Query("SELECT new danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductDTO(p.product.id, p.product.name, p.quantity, p.price) FROM OrderProduct p WHERE p.order.id = :orderId")
-    Set<OrderProductDTO> findByOrderId(UUID orderId);
+    @Query("""
+                select new danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductDTO (
+                    op.id.productId,
+                    p.name,
+                    op.quantity,
+                    op.price
+                  )
+                from OrderProduct op
+                  join Product p on p.id = op.id.productId
+                  join Order o on o.id = op.id.orderId
+                where op.id.orderId = :orderId
+                and o.customer.id = :customerId
+            """)
+    Set<OrderProductDTO> getProjectionsByOrderIdAndCustomerId(UUID orderId, Long customerId);
 }
