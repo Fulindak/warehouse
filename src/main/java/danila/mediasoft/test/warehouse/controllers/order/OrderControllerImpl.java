@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
@@ -23,23 +23,21 @@ public class OrderControllerImpl implements OrderController {
     private final ConversionService conversionService;
 
     @Override
-    public ResponseEntity<CreateOrderResponse> create(CreateOrderRequest orderRequest) {
-        return new ResponseEntity<>(CreateOrderResponse.builder()
+    @ResponseStatus(HttpStatus.CREATED)
+    public CreateOrderResponse create(CreateOrderRequest orderRequest) {
+        return CreateOrderResponse.builder()
                 .id(orderService.create(orderRequest))
-                .build(),
-                HttpStatus.CREATED);
+                .build();
     }
 
     @Override
-    public ResponseEntity<OrderResponse> update(@Valid Set<OrderProductRequest> products, UUID orderId) {
-        OrderResponse orderResponse = conversionService.convert(orderService.update(products, orderId), OrderResponse.class);
-        return ResponseEntity.ok(orderResponse);
+    public OrderResponse update(@Valid Set<OrderProductRequest> products, UUID orderId) {
+        return conversionService.convert(orderService.update(products, orderId), OrderResponse.class);
     }
 
     @Override
-    public ResponseEntity<OrderResponse> get(UUID orderId) {
-        OrderResponse orderResponse = conversionService.convert(orderService.get(orderId), OrderResponse.class);
-        return ResponseEntity.ok(orderResponse);
+    public OrderResponse get(UUID orderId) {
+        return conversionService.convert(orderService.get(orderId), OrderResponse.class);
     }
 
     @Override
@@ -48,15 +46,14 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public ResponseEntity<OrderResponse> confirm(UUID orderId) {
+    public OrderResponse confirm(UUID orderId) {
         return null;
     }
 
     @Override
-    public ResponseEntity<OrderResponse> updateStatus(UpdateStatusRequest updateStatusRequest, UUID orderId) {
-        OrderResponse orderResponse = conversionService.convert(
+    public OrderResponse updateStatus(UpdateStatusRequest updateStatusRequest, UUID orderId) {
+        return conversionService.convert(
                 orderService.updateStatus(updateStatusRequest, orderId),
                 OrderResponse.class);
-        return ResponseEntity.ok(orderResponse);
     }
 }
