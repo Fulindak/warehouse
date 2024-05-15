@@ -1,13 +1,13 @@
 spring:
   config:
    import: file:./.env[.properties],file:.env[.properties]
-  application:
-    name: warehouse
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+
   jpa:
     show-sql: true
     properties:
@@ -24,6 +24,7 @@ server:
   port: ${APP_PORT:8188}
   servlet:
     context-path: /api/v0/
-application:
-  current-profile: postgres
 
+application:
+  name: warehouse
+  current-profile: postgres

@@ -1,6 +1,7 @@
 package danila.mediasoft.test.warehouse.dto.product;
 
 import danila.mediasoft.test.warehouse.dto.producttype.ProductTypeResponse;
+import danila.mediasoft.test.warehouse.enums.CurrencyType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,5 +21,6 @@ public class ProductResponse {
     private Long quantity;
     private LocalDate createAt;
     private LocalDateTime updateAt;
+    private CurrencyType currencyType;
     private boolean isAvailable;
 }

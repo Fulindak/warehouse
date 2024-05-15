@@ -29,4 +29,3 @@ server:
   port: ${APP_PORT:8188}
   servlet:
     context-path: /api/v0
-
