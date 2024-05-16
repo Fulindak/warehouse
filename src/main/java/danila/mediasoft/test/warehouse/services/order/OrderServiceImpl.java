@@ -54,6 +54,9 @@ public class OrderServiceImpl implements OrderService {
         productRepository.findAllById(orderRequest.products()
                         .stream().map(OrderProductRequest::id).toList())
                 .forEach(product -> products.put(product.getId(), product));
+        if (orderRequest.products().size() != products.size()) {
+            throw new ResourceNotFoundException("All products not founds");
+        }
         Order order = Order.builder()
                 .deliveryAddress(orderRequest.deliveryAddress())
                 .customer(customer)

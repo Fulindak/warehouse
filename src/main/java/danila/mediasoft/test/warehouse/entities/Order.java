@@ -43,6 +43,6 @@ public class Order {
     private OrderStatus orderStatus;
     @Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<OrderProduct> products = new HashSet<>();
 }
