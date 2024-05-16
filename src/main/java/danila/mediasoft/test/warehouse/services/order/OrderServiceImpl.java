@@ -30,8 +30,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,7 +98,52 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void update(Set<OrderProductRequest> products, UUID orderId) {
         Order order = getVerifiedOrder(orderId);
-        orderProductRepository.saveAll(updateOrderProduct(products, order));
+        updateOrderProduct(products, order);
+        orderRepository.save(order);
+    }
+
+    private void updateOrderProduct(Set<OrderProductRequest> orderProductRequests, Order order) {
+        Map<UUID, Product> products = new HashMap<>();
+        productRepository.findAllById(orderProductRequests
+                        .stream().map(OrderProductRequest::id).toList())
+                .forEach(product -> products.put(product.getId(), product));
+        Map<UUID, OrderProduct> orderProductMap = order.getProducts().stream()
+                .collect(Collectors
+                        .toMap(it -> it.getId().getProductId(), Function.identity()));
+        for (OrderProductRequest orderProductRequest : orderProductRequests) {
+            UUID productId = orderProductRequest.id();
+            Product product = products.get(orderProductRequest.id());
+            if (product == null) {
+                throw new ResourceNotFoundException("Product by id: " + productId + " not found");
+            }
+            if (product.getIsAvailable().equals(Boolean.FALSE)) {
+                throw new ResourceNotAvailableException("Product by id: " + product.getId() + " not available");
+            }
+            Optional.ofNullable(orderProductMap.get(productId))
+                    .ifPresentOrElse(
+                            it -> {
+                                it.setQuantity(it.getQuantity() +
+                                        checkQuantity(it.getProduct(), orderProductRequest.quantity()));
+                                it.setPrice(it.getProduct().getPrice());
+                            },
+                            () -> {
+                                OrderProduct orderProduct = OrderProduct.builder()
+                                        .product(products.get(productId))
+                                        .id(OrderProductId.builder()
+                                                .orderId(order.getId())
+                                                .productId(productId)
+                                                .build())
+                                        .quantity(0L)
+                                        .order(order)
+                                        .build();
+                                orderProduct.setQuantity(orderProduct.getQuantity() +
+                                        checkQuantity(orderProduct.getProduct(), orderProductRequest.quantity()));
+                                orderProduct.setPrice(orderProduct.getProduct().getPrice());
+                                order.getProducts().add(orderProduct);
+                            }
+                    );
+        }
+
     }
 
     @Override
@@ -143,33 +190,6 @@ public class OrderServiceImpl implements OrderService {
             throw new InvalidStatusException("Order cannot be changed");
         }
         return order;
-    }
-
-    private Set<OrderProduct> updateOrderProduct(Set<OrderProductRequest> orderProductRequests, Order order) {
-        return orderProductRequests
-                .stream()
-                .map(orderProductRequest -> updateOrderProduct(orderProductRequest, order)).collect(Collectors.toSet());
-    }
-
-    private OrderProduct updateOrderProduct(OrderProductRequest orderProductRequests, Order order) {
-        OrderProduct orderProduct = orderProductRepository.findById(OrderProductId.builder()
-                        .orderId(order.getId())
-                        .productId(orderProductRequests.id())
-                        .build())
-                .orElseGet(() ->
-                        OrderProduct.builder()
-                                .product(productService.getProductAndTypes(orderProductRequests.id()))
-                                .id(OrderProductId.builder()
-                                        .orderId(order.getId())
-                                        .productId(orderProductRequests.id())
-                                        .build())
-                                .quantity(0L)
-                                .order(order)
-                                .build());
-        orderProduct.setQuantity(orderProduct.getQuantity() +
-                checkQuantity(orderProduct.getProduct(), orderProductRequests.quantity()));
-        orderProduct.setPrice(orderProduct.getProduct().getPrice());
-        return orderProduct;
     }
 
     private Long checkQuantity(Product product, Long quantity) {
