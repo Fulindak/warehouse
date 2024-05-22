@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-customer" author="danila">
+        <createTable tableName="customer">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="login" type="varchar(512)">
+                    <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet  author="danila"  id="customer_seq">
+        <createSequence  catalogName="warehouse"
+                         dataType="bigint"
+                         incrementBy="20"
+                         schemaName="public"
+                         sequenceName="customer_seq"
+                         startValue="1"/>
+    </changeSet>
+</databaseChangeLog>

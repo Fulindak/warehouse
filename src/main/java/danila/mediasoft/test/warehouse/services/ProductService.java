@@ -4,6 +4,7 @@ import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
 import danila.mediasoft.test.warehouse.entities.ProductType;
+import danila.mediasoft.test.warehouse.exceptions.InvalidValueException;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
@@ -42,6 +43,7 @@ public class ProductService {
                 .article(productDTO.getArticle())
                 .name(productDTO.getName())
                 .productTypes(new ArrayList<>())
+                .isAvailable(true)
                 .build();
         for (Long i : productDTO.getTypes()) {
             ProductType productType = productTypeService.getById(i);
@@ -59,10 +61,12 @@ public class ProductService {
         if (productRepository.findById(productId).isEmpty()) {
             throw new ResourceNotFoundException(PRODUCT_NOT_FOUND);
         }
+        if (newQuantity < 0) {
+            throw new InvalidValueException("Quantity cannot be equal: " + newQuantity);
+        }
         log.info("Start update product by id :" + productId);
         productRepository.updateQuantity(productId, newQuantity);
         log.info("Update  success");
-
     }
 
     public ProductDTO addTypeFromId(UUID productId, Long typeId) {
@@ -117,7 +121,9 @@ public class ProductService {
     }
 
     public void deleteProductById(UUID productId) {
-        productRepository.delete(getProductAndTypes(productId));
+        Product product = getProductAndTypes(productId);
+        product.setIsAvailable(false);
+        productRepository.save(product);
     }
 }
 

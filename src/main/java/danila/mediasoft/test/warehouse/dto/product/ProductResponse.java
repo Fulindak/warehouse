@@ -22,4 +22,5 @@ public class ProductResponse {
     private LocalDate createAt;
     private LocalDateTime updateAt;
     private CurrencyType currencyType;
+    private boolean isAvailable;
 }

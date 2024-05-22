@@ -21,4 +21,5 @@ public class ProductDTO {
     private Long quantity;
     private LocalDateTime updateAt;
     private LocalDate createAt;
+    private Boolean isAvailable;
 }

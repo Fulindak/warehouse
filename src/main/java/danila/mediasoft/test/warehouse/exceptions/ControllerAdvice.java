@@ -21,10 +21,16 @@ public class ControllerAdvice {
         return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
     }
 
+    @ExceptionHandler(ResourceNotAvailableException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleResourceNotAvailable(ResourceNotAvailableException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
-        return new ErrorResponse("e.getMessage()", "e.getClass().getSimpleName()", "e.getStackTrace()[0].getClassName()");
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -32,6 +38,25 @@ public class ControllerAdvice {
     public ErrorResponse handleIncorrectDataType(HttpMessageNotReadableException e) {
         return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
     }
+
+    @ExceptionHandler(InvalidValueException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidValue(InvalidValueException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(ForbiddenException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
+    @ExceptionHandler(InvalidStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidStatus(InvalidStatusException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
 
     @ExceptionHandler(IllegalCurrencyTypeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

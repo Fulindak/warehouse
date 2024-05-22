@@ -38,6 +38,7 @@ public class ProductDTOToProductResponseConverter implements Converter<ProductDT
                 .createAt(productDTO.getCreateAt())
                 .updateAt(productDTO.getUpdateAt())
                 .currencyType(currencyType)
+                .isAvailable(productDTO.getIsAvailable())
                 .build();
     }
 }

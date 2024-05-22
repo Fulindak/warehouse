@@ -6,7 +6,7 @@ spring:
     password: ${DATABASE_PASSWORD}
 
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -17,7 +17,7 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
 server:
-  port: 8189
+  port: ${APP_PORT:8188}
   servlet:
     context-path: /api/v0/
 
