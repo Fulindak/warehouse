@@ -1,5 +1,7 @@
 package danila.mediasoft.test.warehouse.services.crm;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
+@ConditionalOnProperty(prefix = "rest.crm-service", name = "mock", havingValue = "true")
+@Primary
 public class CrmServiceMock implements CrmService {
     private static final String NUMERIC_STRING = "0123456789";
     private static final Integer INN_LENGTH = 12;

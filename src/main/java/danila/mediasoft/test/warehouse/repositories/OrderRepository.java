@@ -14,8 +14,9 @@ import java.util.UUID;
 public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("""
                 select o from Order o
-                left join fetch o.products
-                left join fetch o.customer
+                left join fetch o.products op
+                left join fetch op.product p
+                left join fetch o.customer c
                 where o.orderStatus in :statuses
             """)
     List<Order> findOrdersWithStatuses(@Param("statuses") List<OrderStatus> statuses);

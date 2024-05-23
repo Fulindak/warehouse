@@ -1,5 +1,7 @@
 package danila.mediasoft.test.warehouse.services.account;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
+@ConditionalOnProperty(prefix = "rest.account-service", name = "mock", havingValue = "true")
+@Primary
 public class AccountServiceMock implements AccountService {
     private static final String NUMERIC_STRING = "0123456789";
     private static final Integer BANK_ACCOUNT_LENGTH = 20;
