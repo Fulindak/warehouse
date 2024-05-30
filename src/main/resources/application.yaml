@@ -6,6 +6,11 @@ rest:
     methods:
       get-currency: /api/v1/currencies
 
+kafka:
+  enabled: ${KAFKA_ENABLE:true}
+  url: ${KAFKA_URL:localhost:9091}
+  groupId: ${KAFKA_CONSUMER_CROUP_ID:group1}
+
 spring:
   profiles:
     active: h2

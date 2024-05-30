@@ -5,6 +5,7 @@ import danila.mediasoft.test.warehouse.dto.order.CreateOrderResponse;
 import danila.mediasoft.test.warehouse.dto.order.OrderResponse;
 import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
+import danila.mediasoft.test.warehouse.services.customer.provider.CustomerProvider;
 import danila.mediasoft.test.warehouse.services.order.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,28 +22,29 @@ import java.util.UUID;
 public class OrderControllerImpl implements OrderController {
     private final OrderService orderService;
     private final ConversionService conversionService;
+    private final CustomerProvider customerProvider;
 
     @Override
     @ResponseStatus(HttpStatus.CREATED)
     public CreateOrderResponse create(CreateOrderRequest orderRequest) {
         return CreateOrderResponse.builder()
-                .id(orderService.create(orderRequest))
+                .id(orderService.create(orderRequest, customerProvider.getId()))
                 .build();
     }
 
     @Override
     public void update(@Valid Set<OrderProductRequest> products, UUID orderId) {
-        orderService.update(products, orderId);
+        orderService.update(products, orderId, customerProvider.getId());
     }
 
     @Override
     public OrderResponse get(UUID orderId) {
-        return conversionService.convert(orderService.get(orderId), OrderResponse.class);
+        return conversionService.convert(orderService.get(orderId, customerProvider.getId()), OrderResponse.class);
     }
 
     @Override
     public void delete(UUID orderId) {
-        orderService.delete(orderId);
+        orderService.delete(orderId, customerProvider.getId());
     }
 
     @Override
