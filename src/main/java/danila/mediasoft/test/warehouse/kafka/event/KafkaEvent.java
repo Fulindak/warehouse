@@ -2,7 +2,6 @@ package danila.mediasoft.test.warehouse.kafka.event;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import danila.mediasoft.test.warehouse.kafka.event.Event;
 import danila.mediasoft.test.warehouse.kafka.event.impl.CreateOrderEvent;
 import danila.mediasoft.test.warehouse.kafka.event.impl.DeleteOrderEvent;
 import danila.mediasoft.test.warehouse.kafka.event.impl.UpdateOrderEvent;
