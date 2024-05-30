@@ -22,7 +22,7 @@ public class Consumer {
     private final Set<EventHandler<Event>> eventHandlers;
 
     @KafkaListener(topics = "test_topic", groupId = "group1", containerFactory = "kafkaListenerContainerFactoryByte")
-    public void listenTopic(byte[] message) {
+    public void orderEventListenTopic(byte[] message) {
         String messageString = new String(message, StandardCharsets.UTF_8);
         log.info("Message: {}", messageString);
         final ObjectMapper objectMapper = new ObjectMapper();
