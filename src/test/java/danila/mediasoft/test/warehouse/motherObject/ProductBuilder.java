@@ -94,7 +94,7 @@ public class ProductBuilder {
 
 
     public Product build() {
-        return new Product(id, name, article, quantity, price, productTypes, updateAt, createAt);
+        return new Product(id, name, article, quantity, price, productTypes, updateAt, createAt, true);
     }
 
     public ProductBuilder but() {
