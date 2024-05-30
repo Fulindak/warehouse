@@ -1,7 +1,0 @@
-package danila.mediasoft.test.warehouse.kafka.event;
-
-import danila.mediasoft.test.warehouse.enums.EventStatus;
-
-public interface Event {
-    EventStatus getEvent();
-}

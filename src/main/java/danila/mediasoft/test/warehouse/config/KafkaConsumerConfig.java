@@ -2,7 +2,6 @@ package danila.mediasoft.test.warehouse.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,7 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
-@ConditionalOnProperty(prefix = "kafka", name = "enabled")
+@ConditionalOnProperty(prefix = "app", name = "kafka.enabled")
 public class KafkaConsumerConfig {
     @Value("${kafka.url}")
     private String url;
@@ -36,7 +35,8 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<byte[], byte[]> kafkaListenerContainerFactoryByte() {
-        ConcurrentKafkaListenerContainerFactory<byte[], byte[]> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<byte[], byte[]> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactoryString());
         return factory;
     }

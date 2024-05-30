@@ -6,6 +6,10 @@ rest:
     methods:
       get-currency: /api/v1/currencies
 
+app:
+  kafka:
+    enabled: ${KAFKA_ENABLE:true}
+
 kafka:
   enabled: ${KAFKA_ENABLE:true}
   url: ${KAFKA_URL:localhost:9091}
