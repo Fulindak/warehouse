@@ -26,7 +26,15 @@ public class AccountServiceMock implements AccountService {
 
     @Override
     public CompletableFuture<Map<String, String>> getAsyncAccounts(List<String> customerLogins) {
-        return CompletableFuture.supplyAsync(() -> getAccounts(customerLogins));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return
+                    getAccounts(customerLogins);
+        });
     }
 
     private String generateBankAccount() {

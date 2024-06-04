@@ -26,12 +26,12 @@ import danila.mediasoft.test.warehouse.services.account.AccountService;
 import danila.mediasoft.test.warehouse.services.crm.CrmService;
 import danila.mediasoft.test.warehouse.services.customer.provider.CustomerProvider;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.internal.Pair;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -198,24 +198,26 @@ public class OrderServiceImpl implements OrderService {
         List<String> customersLogin = orders.stream().map(order -> order.getCustomer().getLogin()).toList();
         CompletableFuture<Map<String, String>> accountsFuture = accountService.getAsyncAccounts(customersLogin);
         CompletableFuture<Map<String, String>> innFuture = crmService.getAsyncInn(customersLogin);
-        Map<String, String> accounts = accountsFuture.join();
-        Map<String, String> inn = innFuture.join();
-        return orders.stream().flatMap(order -> order.getProducts().stream()).map(prod -> new SimpleEntry<>(prod, prod.getOrder()))
-                .collect(Collectors.groupingBy(it -> it.getKey().getId().getProductId(),
+        return orders.stream().flatMap(order -> order.getProducts().stream()).map(prod -> Pair.of(prod, prod.getOrder()))
+                .collect(Collectors.groupingBy(it -> it.getLeft().getId().getProductId(),
                         Collectors.mapping(it -> {
-                            Order order = it.getValue();
+                            Order order = it.getRight();
                             Customer customer = order.getCustomer();
                             return OrderInfo.builder()
                                     .id(order.getId())
                                     .customer(CustomerInfo.builder()
                                             .id(customer.getId())
-                                            .accountNumber(accounts.get(customer.getLogin()))
+                                            .accountNumber(Optional.ofNullable(accountsFuture.join())
+                                                    .orElseThrow(() -> new ResourceNotAvailableException("Account service is unavailable"))
+                                                    .get(customer.getLogin()))
                                             .email(customer.getEmail())
-                                            .inn(inn.get(customer.getLogin()))
+                                            .inn(Optional.ofNullable(innFuture.join())
+                                                    .orElseThrow(() -> new ResourceNotFoundException("CRM service is unavailable"))
+                                                    .get(customer.getLogin()))
                                             .build())
                                     .status(order.getOrderStatus())
                                     .deliverAddress(order.getDeliveryAddress())
-                                    .quantity(it.getKey().getQuantity())
+                                    .quantity(it.getLeft().getQuantity())
                                     .build();
                         }, Collectors.toList())));
     }

@@ -26,7 +26,15 @@ public class CrmServiceMock implements CrmService {
 
     @Override
     public CompletableFuture<Map<String, String>> getAsyncInn(List<String> customerLogins) {
-        return CompletableFuture.supplyAsync(() -> getInn(customerLogins));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return
+                    getInn(customerLogins);
+        });
     }
 
     private String generateInn() {
