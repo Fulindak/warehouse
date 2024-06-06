@@ -3,6 +3,7 @@ package danila.mediasoft.test.warehouse.controllers;
 import danila.mediasoft.test.warehouse.dto.product.*;
 import danila.mediasoft.test.warehouse.services.ProductService;
 import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -94,5 +96,17 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable UUID productId) {
         productService.deleteProductById(productId);
+    }
+
+    @PostMapping("/{productId}/upload")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void uploadImg(@PathVariable UUID productId, @RequestParam("file") MultipartFile image) {
+        productService.upload(productId, image);
+    }
+
+    @PostMapping(value = "/{productId}/download", produces="application/zip")
+    @ResponseStatus(HttpStatus.OK)
+    public void downloadImgs(@PathVariable UUID productId, HttpServletResponse response) {
+         productService.downloadImgs(productId, response);
     }
 }

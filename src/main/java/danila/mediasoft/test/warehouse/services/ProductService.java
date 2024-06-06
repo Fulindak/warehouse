@@ -3,25 +3,38 @@ package danila.mediasoft.test.warehouse.services;
 import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
 import danila.mediasoft.test.warehouse.entities.Product;
+import danila.mediasoft.test.warehouse.entities.ProductImg;
 import danila.mediasoft.test.warehouse.entities.ProductType;
 import danila.mediasoft.test.warehouse.exceptions.InvalidValueException;
 import danila.mediasoft.test.warehouse.exceptions.ResourceNotFoundException;
+import danila.mediasoft.test.warehouse.exceptions.UploadException;
 import danila.mediasoft.test.warehouse.exceptions.ValueAlreadyExistsException;
+import danila.mediasoft.test.warehouse.repositories.ProductImgRepository;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
 import danila.mediasoft.test.warehouse.services.search.ProductSpecification;
 import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
+import danila.mediasoft.test.warehouse.util.MinioUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @Slf4j
@@ -31,6 +44,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductTypeService productTypeService;
     private final ConversionService conversionService;
+    private final ProductImgRepository productImgRepository;
+    private final MinioUtil minioUtil;
 
     public UUID createProduct(CreateProductDTO productDTO) {
         if (productRepository.findByArticle(productDTO.getArticle()).isPresent()) {
@@ -125,5 +140,40 @@ public class ProductService {
         product.setIsAvailable(false);
         productRepository.save(product);
     }
+
+    @Transactional
+    public void upload(UUID productId, MultipartFile image) {
+        Optional.ofNullable(image)
+                .orElseThrow(() -> new UploadException("Image must not be null "));
+        productImgRepository.uploadImg(productId, minioUtil.uploadFile(image), getExtension(image));
+    }
+
+    private String getExtension(MultipartFile image) {
+        return image.getOriginalFilename()
+                .substring(image.getOriginalFilename()
+                        .lastIndexOf(".") + 1);
+    }
+
+    @Transactional
+    @SneakyThrows
+    public void downloadImgs(UUID productId, HttpServletResponse response) {
+        Product product = getProductAndTypes(productId);
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
+                .filename(product.getName() + "-" + product.getArticle() + ".zip")
+                .build()
+                .toString());
+        Set<ProductImg> imagesId = product.getImages();
+        try (ZipOutputStream zip = new ZipOutputStream(response.getOutputStream())) {
+            for (ProductImg img : imagesId) {
+                byte[] file = minioUtil.loadFile(img.getImageId().toString());
+                if (file == null || file.length == 0) continue;
+                zip.putNextEntry(new ZipEntry(img.getImageId().toString() + "." + img.getExpansion()));
+                StreamUtils.copy(file, zip);
+                zip.flush();
+            }
+        }
+    }
 }
+
+
 
