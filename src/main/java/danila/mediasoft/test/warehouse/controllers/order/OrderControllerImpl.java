@@ -2,6 +2,7 @@ package danila.mediasoft.test.warehouse.controllers.order;
 
 import danila.mediasoft.test.warehouse.dto.order.CreateOrderRequest;
 import danila.mediasoft.test.warehouse.dto.order.CreateOrderResponse;
+import danila.mediasoft.test.warehouse.dto.order.OrderInfo;
 import danila.mediasoft.test.warehouse.dto.order.OrderResponse;
 import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -55,5 +58,10 @@ public class OrderControllerImpl implements OrderController {
         return conversionService.convert(
                 orderService.updateStatus(updateStatusRequest, orderId),
                 OrderResponse.class);
+    }
+
+    @Override
+    public Map<UUID, List<OrderInfo>> getOrdersInfoGroupByProductId() {
+        return orderService.getOrdersInfoGroupByProductId();
     }
 }
