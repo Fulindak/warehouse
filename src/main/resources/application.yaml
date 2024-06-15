@@ -1,10 +1,20 @@
 rest:
   currency-service:
-    host: http://localhost:8081
+    host: ${CURRENCY_SERVICE_URL:http://localhost:8081}
     filePath: exchange-rate.json
-    mock: false
+    mock: ${CURRENCY_SERVICE_MOCK:false}
     methods:
-      get-currency: /api/v1/currencies
+      get-currency: ${CRM_SERVICE_GET_CURRENCY_METHOD:/api/v1/currencies}
+  crm-service:
+    host: ${CRM_SERVICE_URL:http://localhost:8081}
+    mock: ${CRM_SERVICE_MOCK:false}
+    methods:
+      get-inn: ${CRM_SERVICE_GET_INN_METHOD:/api/v1/inn}
+  account-service:
+    host: ${ACCOUNT_SERVICE_URL:http://localhost:8081}
+    mock: ${ACCOUNT_SERVICE_MOCK:false}
+    methods:
+      get-accounts: ${ACCOUNT_SERVICE_GET_ACCOUNT_METHOD:/api/v1/accounts}
 
 app:
   kafka:
@@ -17,7 +27,7 @@ kafka:
 
 spring:
   profiles:
-    active: h2
+    active: postgres
   cache:
     cache-names: currencyRates
     caffeine:

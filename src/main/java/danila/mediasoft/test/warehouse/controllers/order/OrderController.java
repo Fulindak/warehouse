@@ -2,6 +2,7 @@ package danila.mediasoft.test.warehouse.controllers.order;
 
 import danila.mediasoft.test.warehouse.dto.order.CreateOrderRequest;
 import danila.mediasoft.test.warehouse.dto.order.CreateOrderResponse;
+import danila.mediasoft.test.warehouse.dto.order.OrderInfo;
 import danila.mediasoft.test.warehouse.dto.order.OrderResponse;
 import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,4 +43,7 @@ public interface OrderController {
 
     @PatchMapping("/{orderId}/status")
     OrderResponse updateStatus(@Valid @RequestBody UpdateStatusRequest updateStatusRequest, @PathVariable UUID orderId);
+
+    @GetMapping("/info")
+    Map<UUID, List<OrderInfo>> getOrdersInfoGroupByProductId();
 }
