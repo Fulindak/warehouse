@@ -12,13 +12,13 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface OrderService {
-    UUID create(CreateOrderRequest orderRequest);
+    UUID create(CreateOrderRequest orderRequest, Long customerId);
 
-    void update(Set<OrderProductRequest> products, UUID orderId);
+    void update(Set<OrderProductRequest> products, UUID orderId, Long customerId);
 
-    OrderDTO get(UUID orderId);
+    OrderDTO get(UUID orderId, Long customerId);
 
-    void delete(UUID orderId);
+    void delete(UUID orderI, Long customerId);
 
     OrderDTO updateStatus(UpdateStatusRequest updateStatusRequest, UUID orderId);
 

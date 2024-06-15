@@ -58,8 +58,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public UUID create(CreateOrderRequest orderRequest) {
-        Customer customer = customerRepository.findById(customerProvider.getId())
+    public UUID create(CreateOrderRequest orderRequest, Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer by " + customerProvider.getId() + " not found"));
         Map<UUID, Product> products = new HashMap<>();
         productRepository.findAllById(orderRequest.products()
@@ -105,8 +105,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void update(Set<OrderProductRequest> products, UUID orderId) {
-        Order order = getVerifiedOrder(orderId);
+    public void update(Set<OrderProductRequest> products, UUID orderId, Long customerId) {
+        Order order = getVerifiedOrder(orderId, customerId);
         updateOrderProduct(products, order);
         orderRepository.save(order);
     }
@@ -156,10 +156,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO get(UUID orderId) {
+    public OrderDTO get(UUID orderId, Long customerId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order by id: " + orderId + " not found"));
-        if (!order.getCustomer().getId().equals(customerProvider.getId())) {
+        if (!order.getCustomer().getId().equals(customerId)) {
             throw new ForbiddenException("Customer id != Customer in order");
         }
         Set<OrderProductDTO> products = orderProductRepository
@@ -176,18 +176,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void delete(UUID orderId) {
-        Order order = getVerifiedOrder(orderId);
+    public void delete(UUID orderId, Long customerId) {
+        Order order = getVerifiedOrder(orderId, customerId);
         order.setOrderStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
     }
 
     @Override
     public OrderDTO updateStatus(UpdateStatusRequest updateStatusRequest, UUID orderId) {
-        Order order = getVerifiedOrder(orderId);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order by id: " + orderId + " not found"));
+        if (!order.getOrderStatus().equals(OrderStatus.CREATED)) {
+            throw new InvalidStatusException("Order cannot be changed");
+        }
         order.setOrderStatus(updateStatusRequest.status());
         return conversionService.convert(orderRepository.save(order), OrderDTO.class);
     }
+
 
     @Override
     public Map<UUID, List<OrderInfo>> getOrdersInfoGroupByProductId() {
@@ -222,10 +227,10 @@ public class OrderServiceImpl implements OrderService {
                         }, Collectors.toList())));
     }
 
-    private Order getVerifiedOrder(UUID id) {
+    private Order getVerifiedOrder(UUID id, Long customerId) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order by id: " + id + " not found"));
-        if (!order.getCustomer().getId().equals(customerProvider.getId())) {
+        if (!order.getCustomer().getId().equals(customerId)) {
             throw new ForbiddenException("Customer id != Customer in order");
         }
         if (!order.getOrderStatus().equals(OrderStatus.CREATED)) {
