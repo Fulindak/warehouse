@@ -7,5 +7,5 @@ RUN mvn -f /pom.xml clean package -DskipTests
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /target/*.jar warehouse.jar
-EXPOSE 8189
+EXPOSE 8188
 ENTRYPOINT ["java", "--add-opens", "java.base/java.time=ALL-UNNAMED", "-jar", "warehouse.jar"]

@@ -1,7 +1,9 @@
 package danila.mediasoft.test.warehouse.services.order;
 
+import danila.mediasoft.test.warehouse.dto.customer.CustomerInfo;
 import danila.mediasoft.test.warehouse.dto.order.CreateOrderRequest;
 import danila.mediasoft.test.warehouse.dto.order.OrderDTO;
+import danila.mediasoft.test.warehouse.dto.order.OrderInfo;
 import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductDTO;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
@@ -20,8 +22,11 @@ import danila.mediasoft.test.warehouse.repositories.OrderProductRepository;
 import danila.mediasoft.test.warehouse.repositories.OrderRepository;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
 import danila.mediasoft.test.warehouse.services.ProductService;
+import danila.mediasoft.test.warehouse.services.account.AccountService;
+import danila.mediasoft.test.warehouse.services.crm.CrmService;
 import danila.mediasoft.test.warehouse.services.customer.provider.CustomerProvider;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.internal.Pair;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +34,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -46,6 +53,8 @@ public class OrderServiceImpl implements OrderService {
     private final ProductService productService;
     private final ProductRepository productRepository;
     private final OrderProductRepository orderProductRepository;
+    private final AccountService accountService;
+    private final CrmService crmService;
 
     @Override
     @Transactional
@@ -178,6 +187,39 @@ public class OrderServiceImpl implements OrderService {
         Order order = getVerifiedOrder(orderId);
         order.setOrderStatus(updateStatusRequest.status());
         return conversionService.convert(orderRepository.save(order), OrderDTO.class);
+    }
+
+    @Override
+    public Map<UUID, List<OrderInfo>> getOrdersInfoGroupByProductId() {
+        List<Order> orders = orderRepository.findOrdersWithStatuses(List.of(OrderStatus.CREATED, OrderStatus.CONFIRMED));
+        if (orders.isEmpty()) {
+            return new HashMap<>();
+        }
+        List<String> customersLogin = orders.stream().map(order -> order.getCustomer().getLogin()).toList();
+        CompletableFuture<Map<String, String>> accountsFuture = accountService.getAsyncAccounts(customersLogin);
+        CompletableFuture<Map<String, String>> innFuture = crmService.getAsyncInn(customersLogin);
+        return orders.stream().flatMap(order -> order.getProducts().stream()).map(prod -> Pair.of(prod, prod.getOrder()))
+                .collect(Collectors.groupingBy(it -> it.getLeft().getId().getProductId(),
+                        Collectors.mapping(it -> {
+                            Order order = it.getRight();
+                            Customer customer = order.getCustomer();
+                            return OrderInfo.builder()
+                                    .id(order.getId())
+                                    .customer(CustomerInfo.builder()
+                                            .id(customer.getId())
+                                            .accountNumber(Optional.ofNullable(accountsFuture.join())
+                                                    .orElseThrow(() -> new ResourceNotAvailableException("Account service is unavailable"))
+                                                    .get(customer.getLogin()))
+                                            .email(customer.getEmail())
+                                            .inn(Optional.ofNullable(innFuture.join())
+                                                    .orElseThrow(() -> new ResourceNotFoundException("CRM service is unavailable"))
+                                                    .get(customer.getLogin()))
+                                            .build())
+                                    .status(order.getOrderStatus())
+                                    .deliverAddress(order.getDeliveryAddress())
+                                    .quantity(it.getLeft().getQuantity())
+                                    .build();
+                        }, Collectors.toList())));
     }
 
     private Order getVerifiedOrder(UUID id) {
