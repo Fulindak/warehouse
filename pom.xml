@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <modelmapper.version>2.3.0</modelmapper.version>
         <webmvc-ui.version>2.0.2</webmvc-ui.version>
+        <camunda-bpm.version>7.21.0</camunda-bpm.version>
     </properties>
     <dependencies>
         <dependency>
@@ -83,6 +84,20 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-relational</artifactId>
             <version>3.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+            <version>${camunda-bpm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+            <version>${camunda-bpm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
         </dependency>
     </dependencies>
     <build>
