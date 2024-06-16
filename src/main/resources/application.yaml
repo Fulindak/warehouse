@@ -15,15 +15,47 @@ rest:
     mock: ${ACCOUNT_SERVICE_MOCK:false}
     methods:
       get-accounts: ${ACCOUNT_SERVICE_GET_ACCOUNT_METHOD:/api/v1/accounts}
+  contract-service:
+    host: ${CONTRACT_SERVICE_URL:http://localhost:8081}
+    mock: ${CONTRACT_SERVICE_MOCK:false}
+    methods:
+      post-create: ${CONTRACT_SERVICE_POST_CREATE_METHOD:/api/v1/contract/create}
+  delivery-service:
+    host: ${DELIVERY_SERVICE_URL:http://localhost:8081}
+    mock: ${DELIVERY_SERVICE_MOCK:false}
+    methods:
+      post-create: ${DELIVERY_SERVICE_POST_CREATE_METHOD:/api/v1/delivery/create}
+  notification-service:
+    host: ${NOTIFICATION_SERVICE_URL:http://localhost:8081}
+    mock: ${NOTIFICATION_SERVICE_MOCK:false}
+    methods:
+      post-notify: ${NOTIFICATION_SERVICE_POST_NOTIFY_METHOD:/api/v1/notify}
+  payment-service:
+    host: ${PAYMENT_SERVICE_URL:http://localhost:8081}
+    mock: ${PAYMENT_SERVICE_MOCK:false}
+    methods:
+      post-pay: ${PAYMENT_SERVICE_POST_PAY_METHOD:/api/v1/pay}
+
 
 app:
   kafka:
     enabled: ${KAFKA_ENABLE:true}
 
 kafka:
-  enabled: ${KAFKA_ENABLE:true}
   url: ${KAFKA_URL:localhost:9091}
   groupId: ${KAFKA_CONSUMER_CROUP_ID:group1}
+
+camunda:
+  bpm:
+    job-execution:
+      enabled: true # http://localhost:8188/api/v0/camunda/app/admin/default/#/
+    generic-properties:
+      properties:
+        historyTimeToLive: P1D
+    admin-user:
+      id: danila
+      password: danila
+      firstName: danila
 
 spring:
   profiles:

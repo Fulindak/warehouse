@@ -51,8 +51,8 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public OrderResponse confirm(UUID orderId) {
-        return null;
+    public void confirm(UUID orderId) {
+        orderService.confirm(orderId, customerProvider.getId());
     }
 
     @Override

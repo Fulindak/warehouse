@@ -39,7 +39,8 @@ public interface OrderController {
     void delete(@PathVariable UUID orderId);
 
     @PostMapping("/{orderId}/confirm")
-    OrderResponse confirm(@PathVariable UUID orderId);
+    @ResponseStatus(HttpStatus.OK)
+    void confirm(@PathVariable UUID orderId);
 
     @PatchMapping("/{orderId}/status")
     OrderResponse updateStatus(@Valid @RequestBody UpdateStatusRequest updateStatusRequest, @PathVariable UUID orderId);

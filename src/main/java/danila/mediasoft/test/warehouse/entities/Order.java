@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -45,4 +46,8 @@ public class Order {
     private String deliveryAddress;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<OrderProduct> products = new HashSet<>();
+    @Column(name = "delivery_date")
+    private LocalDate deliveryDate;
+    @Column(name = "business_key")
+    private UUID businessKey;
 }

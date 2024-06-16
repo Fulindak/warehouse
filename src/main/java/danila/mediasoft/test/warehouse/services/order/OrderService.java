@@ -5,7 +5,9 @@ import danila.mediasoft.test.warehouse.dto.order.OrderDTO;
 import danila.mediasoft.test.warehouse.dto.order.OrderInfo;
 import danila.mediasoft.test.warehouse.dto.order.UpdateStatusRequest;
 import danila.mediasoft.test.warehouse.dto.orderproduct.OrderProductRequest;
+import danila.mediasoft.test.warehouse.enums.OrderStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +25,10 @@ public interface OrderService {
     OrderDTO updateStatus(UpdateStatusRequest updateStatusRequest, UUID orderId);
 
     Map<UUID, List<OrderInfo>> getOrdersInfoGroupByProductId();
+
+    void confirm (UUID orderId, Long customerId);
+
+    void  updateStatusAndSetDeliveryDate(UUID orderId, OrderStatus status, LocalDate date);
 }
 
 
