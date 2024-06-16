@@ -24,7 +24,7 @@ public class RemoveContractDelegate implements JavaDelegate {
             );
         } catch (Exception e) {
             log.error("Delegate: {}; Exception: {}", this.getClass().getSimpleName(), e);
-            throw new BpmnError("ERROR");
+            throw new BpmnError("COMPENSATE_ERROR");
         }
     }
 }

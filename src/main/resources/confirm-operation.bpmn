@@ -73,14 +73,14 @@
         <bpmn:incoming>Flow_0nxc04c</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_0nxc04c" sourceRef="Activity_1v262rg" targetRef="Event_0stshy3" />
-      <bpmn:startEvent id="Event_029r0n7">
+      <bpmn:startEvent id="Event_029r0n7" camunda:asyncBefore="true">
         <bpmn:outgoing>Flow_01p0y48</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0j7b7d4" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0j7b7d4" errorRef="Error_1q13eik" camunda:errorCodeVariable="ERROR" />
       </bpmn:startEvent>
       <bpmn:sequenceFlow id="Flow_0czqlsb" sourceRef="Activity_1uwvw5j" targetRef="Activity_1v262rg" />
       <bpmn:sequenceFlow id="Flow_0eum5t4" sourceRef="Event_1tuo4f8" targetRef="Activity_1uwvw5j" />
       <bpmn:sequenceFlow id="Flow_01p0y48" sourceRef="Event_029r0n7" targetRef="Event_1tuo4f8" />
-      <bpmn:intermediateThrowEvent id="Event_1tuo4f8">
+      <bpmn:intermediateThrowEvent id="Event_1tuo4f8" camunda:asyncBefore="true">
         <bpmn:incoming>Flow_01p0y48</bpmn:incoming>
         <bpmn:outgoing>Flow_0eum5t4</bpmn:outgoing>
         <bpmn:compensateEventDefinition id="CompensateEventDefinition_1mfieq3" />
@@ -128,12 +128,12 @@
       <bpmn:incoming>Flow_0q45rri</bpmn:incoming>
       <bpmn:outgoing>Flow_0thfwuw</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_057ma21" name="Уведомление &#34;Заказ отменен&#34;" camunda:asyncBefore="true" camunda:delegateExpression="${errorInfoMsgDelegate}">
+    <bpmn:serviceTask id="Activity_057ma21" name="Уведомление &#34;Заказ отменен&#34;" camunda:asyncBefore="true" camunda:exclusive="false" camunda:delegateExpression="${errorInfoMsgDelegate}">
       <bpmn:incoming>Flow_0v9o9wc</bpmn:incoming>
       <bpmn:outgoing>Flow_0136jxd</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_0ze2q2q" name="Отмена Доставки" isForCompensation="true" camunda:asyncBefore="true" camunda:delegateExpression="${cancelDeliveryDelegate}" />
-    <bpmn:intermediateCatchEvent id="continueProcessMsg" camunda:asyncBefore="true">
+    <bpmn:intermediateCatchEvent id="continueProcessMsg">
       <bpmn:incoming>Flow_0fqtfcl</bpmn:incoming>
       <bpmn:outgoing>Flow_0zesu70</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1qdm8hr" messageRef="Message_38ke3th" />
@@ -143,6 +143,7 @@
     <bpmn:association id="Association_0omkaav" associationDirection="One" sourceRef="BoundaryEvent_0ay0ner" targetRef="Task_0zexqgt" />
   </bpmn:process>
   <bpmn:message id="Message_38ke3th" name="continueProcessMsg" />
+  <bpmn:error id="Error_1q13eik" name="Error_15bj05a" errorCode="ERROR" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0ux5zhi">
       <bpmndi:BPMNShape id="Participant_0wh2341_di" bpmnElement="ConfirmEvent" isHorizontal="true">
