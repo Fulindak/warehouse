@@ -5,7 +5,6 @@ import danila.mediasoft.test.warehouse.dto.contract.ContractRequest;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,13 +24,11 @@ public class ContractServiceClient implements ContractService {
     public @Nullable UUID createContract(String inn, String accountNumber) {
         WebClient webClient = WebClient.builder().baseUrl(properties.host()).build();
         ContractRequest request = new ContractRequest(inn, accountNumber);
-        return webClient
-                .post()
+        String uuidString = webClient.post()
                 .uri(properties.methods().postCreate())
-                .bodyValue(BodyInserters.fromValue(request))
+                .bodyValue(request)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<UUID>() {
-                })
+                .bodyToMono(String.class)
                 .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)))
                 .onErrorResume(ex -> {
                     log.error(ex.getMessage());
@@ -39,6 +36,10 @@ public class ContractServiceClient implements ContractService {
                 })
                 .blockOptional()
                 .orElse(null);
+        if (uuidString != null) {
+            return UUID.fromString(uuidString);
+        }
+        return null;
     }
 
     @Override

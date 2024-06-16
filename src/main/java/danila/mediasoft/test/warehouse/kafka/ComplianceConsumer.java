@@ -26,8 +26,7 @@ public class ComplianceConsumer {
         try {
             final ComplianceResponse response = objectMapper.readValue(message, ComplianceResponse.class);
             log.info("Response: {}", response);
-            runtimeService
-                    .createMessageCorrelation("continueProcessMsg")
+            runtimeService.createMessageCorrelation("continueProcessMsg")
                     .processInstanceBusinessKey(response.businessKey().toString())
                     .setVariable("complianceStatus", response.status())
                     .correlate();

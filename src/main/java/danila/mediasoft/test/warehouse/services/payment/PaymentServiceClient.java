@@ -5,9 +5,7 @@ import danila.mediasoft.test.warehouse.dto.payment.PaymentRequest;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
@@ -26,13 +24,11 @@ public class PaymentServiceClient implements PaymentService {
     public @Nullable String payOrder(UUID orderId, BigDecimal price, String accountNumber) {
         WebClient webClient = WebClient.builder().baseUrl(properties.host()).build();
         PaymentRequest request = new PaymentRequest(orderId, price, accountNumber);
-        return webClient
-                .post()
+        return webClient.post()
                 .uri(properties.methods().postPay())
-                .bodyValue(BodyInserters.fromValue(request))
+                .bodyValue(request)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<String>() {
-                })
+                .bodyToMono(String.class)
                 .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)))
                 .onErrorResume(ex -> {
                     log.error(ex.getMessage());

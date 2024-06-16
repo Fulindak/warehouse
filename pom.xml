@@ -19,7 +19,26 @@
         <webmvc-ui.version>2.0.2</webmvc-ui.version>
         <camunda-bpm.version>7.21.0</camunda-bpm.version>
     </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>com.maciejwalkowiak.spring</groupId>
+            <artifactId>wiremock-spring-boot</artifactId>
+            <version>2.0.0</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wiremock</groupId>
+                    <artifactId>wiremock</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>3.3.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>

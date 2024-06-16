@@ -5,7 +5,6 @@ import danila.mediasoft.test.warehouse.dto.delivery.DeliveryRequest;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,13 +24,11 @@ public class DeliveryServiceClient implements DeliveryService {
     @Override
     public @Nullable LocalDate createDelivery(DeliveryRequest request) {
         WebClient webClient = WebClient.builder().baseUrl(properties.host()).build();
-        return webClient
-                .post()
+        String deliveryDate = webClient.post()
                 .uri(properties.methods().postCreate())
-                .bodyValue(BodyInserters.fromValue(request))
+                .bodyValue(request)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<LocalDate>() {
-                })
+                .bodyToMono(String.class)
                 .retryWhen(Retry.backoff(2, Duration.ofSeconds(1)))
                 .onErrorResume(ex -> {
                     log.error(ex.getMessage());
@@ -39,6 +36,10 @@ public class DeliveryServiceClient implements DeliveryService {
                 })
                 .blockOptional()
                 .orElse(null);
+        if (deliveryDate != null) {
+            return LocalDate.parse(deliveryDate);
+        }
+        return null;
     }
 
     @Override

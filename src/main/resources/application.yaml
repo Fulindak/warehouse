@@ -61,7 +61,7 @@ camunda:
 
 spring:
   profiles:
-    active: postgres
+    active: h2
   cache:
     cache-names: currencyRates
     caffeine:
