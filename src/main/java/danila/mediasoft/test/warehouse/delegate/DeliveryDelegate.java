@@ -1,8 +1,8 @@
 package danila.mediasoft.test.warehouse.delegate;
 
 import danila.mediasoft.test.warehouse.dto.delivery.DeliveryRequest;
+import danila.mediasoft.test.warehouse.exceptions.ResourceNotAvailableException;
 import danila.mediasoft.test.warehouse.services.delivery.DeliveryService;
-import danila.mediasoft.test.warehouse.services.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.BpmnError;
@@ -11,6 +11,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -18,7 +19,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DeliveryDelegate implements JavaDelegate {
     private final DeliveryService deliveryService;
-    private final OrderService orderService;
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
@@ -26,6 +26,7 @@ public class DeliveryDelegate implements JavaDelegate {
             DeliveryRequest request = new DeliveryRequest(delegateExecution.getVariable("deliveryAddress").toString(),
                     UUID.fromString(delegateExecution.getVariable("orderId").toString()));
             LocalDate deliveryDate = deliveryService.createDelivery(request);
+            Optional.ofNullable(deliveryDate).orElseThrow(() -> new ResourceNotAvailableException("Delivery Service недоступен"));
             delegateExecution.setVariable("deliveryDate", deliveryDate);
         } catch (Exception e) {
             log.error("Delegate: {}; Exception: {}", this.getClass().getSimpleName(), e);

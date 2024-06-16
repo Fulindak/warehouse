@@ -1,5 +1,6 @@
 package danila.mediasoft.test.warehouse.delegate;
 
+import danila.mediasoft.test.warehouse.exceptions.ResourceNotAvailableException;
 import danila.mediasoft.test.warehouse.services.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -26,6 +28,7 @@ public class PaymentDelegate implements JavaDelegate {
                     new BigDecimal(delegateExecution.getVariable("price").toString()),
                     delegateExecution.getVariable("accountNumber").toString()
             );
+            Optional.ofNullable(status).orElseThrow(() -> new ResourceNotAvailableException("Payment Service недоступен"));
             if (status.equals(SUCCESS_PAYMENT_STATUS)) {
                 delegateExecution.setVariable("paymentStatus", SUCCESS_PAYMENT_STATUS);
             }

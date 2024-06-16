@@ -1,5 +1,6 @@
 package danila.mediasoft.test.warehouse.delegate;
 
+import danila.mediasoft.test.warehouse.exceptions.ResourceNotAvailableException;
 import danila.mediasoft.test.warehouse.services.contract.ContractService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -23,6 +25,7 @@ public class ContractDelegate implements JavaDelegate {
                     delegateExecution.getVariable("inn").toString(),
                     delegateExecution.getVariable("accountNumber").toString()
             );
+            Optional.ofNullable(contractId).orElseThrow(() -> new ResourceNotAvailableException("Contract Service недоступен"));
             delegateExecution.setVariable("contractId", contractId.toString());
         } catch (Exception e) {
             log.error("Delegate: {}; Exception: {}", this.getClass().getSimpleName(), e);
