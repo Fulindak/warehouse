@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="add-new-column-business_key-" author="danila">
+        <addColumn tableName="orders">
+            <column name="business_key" type="uuid"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="add-new-column-delivery_date-" author="danila">
+        <addColumn tableName="orders">
+            <column name="delivery_date" type="date"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

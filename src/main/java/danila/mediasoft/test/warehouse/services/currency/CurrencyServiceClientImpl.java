@@ -20,12 +20,12 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class CurrencyServiceClientImpl implements CurrencyServiceClient {
-    private final WebClient webClient;
     private final CurrencyProperties properties;
 
     @Override
     @Cacheable(cacheNames = "currencyRates", key = "#root.methodName", unless = "#result == null")
     public @Nullable CurrencyRates getCurrencyRates() {
+        WebClient webClient = WebClient.builder().baseUrl(properties.host()).build();
         return webClient
                 .get()
                 .uri(properties.methods().getCurrency())

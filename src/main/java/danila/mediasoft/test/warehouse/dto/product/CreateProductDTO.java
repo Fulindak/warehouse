@@ -3,6 +3,7 @@ package danila.mediasoft.test.warehouse.dto.product;
 import danila.mediasoft.test.warehouse.dto.validation.Marker;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Data
 @Schema(description = "Request for create product")
+@Builder
 public class CreateProductDTO {
     @Schema(description = "Product  name", example = "String_2342")
     @NotNull(message = "Product name must be not null", groups = {Marker.OnCreate.class, Marker.OnUpdate.class})

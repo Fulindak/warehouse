@@ -19,11 +19,11 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @RequiredArgsConstructor
 public class AccountServiceClient implements AccountService {
-    private final WebClient webClient;
     private final AccountProperties properties;
 
     @Override
     public @Nullable Map<String, String> getAccounts(List<String> customerLogins) {
+        WebClient webClient = WebClient.builder().baseUrl(properties.host()).build();
         return webClient
                 .post()
                 .uri(properties.methods().getAccounts())

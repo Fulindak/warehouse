@@ -19,11 +19,11 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @RequiredArgsConstructor
 public class CrmServiceClient implements CrmService {
-    private final WebClient webClient;
     private final CrmProperties properties;
 
     @Override
     public @Nullable Map<String, String> getInn(List<String> customerLogins) {
+        WebClient webClient = WebClient.builder().baseUrl(properties.host()).build();
         return webClient
                 .post()
                 .uri(properties.methods().getInn())

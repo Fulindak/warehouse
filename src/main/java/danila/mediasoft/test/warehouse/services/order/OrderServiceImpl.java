@@ -23,6 +23,7 @@ import danila.mediasoft.test.warehouse.repositories.OrderRepository;
 import danila.mediasoft.test.warehouse.repositories.ProductRepository;
 import danila.mediasoft.test.warehouse.services.ProductService;
 import danila.mediasoft.test.warehouse.services.account.AccountService;
+import danila.mediasoft.test.warehouse.services.camunda.ConfirmEvent;
 import danila.mediasoft.test.warehouse.services.crm.CrmService;
 import danila.mediasoft.test.warehouse.services.customer.provider.CustomerProvider;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +57,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductRepository orderProductRepository;
     private final AccountService accountService;
     private final CrmService crmService;
+    private final ConfirmEvent confirmEvent;
+    private final List<OrderStatus> unchangeableStatuses = List.of(OrderStatus.DONE, OrderStatus.CONFIRMED);
 
     @Override
     @Transactional
@@ -186,13 +190,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO updateStatus(UpdateStatusRequest updateStatusRequest, UUID orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order by id: " + orderId + " not found"));
-        if (!order.getOrderStatus().equals(OrderStatus.CREATED)) {
+        if (unchangeableStatuses.contains(order.getOrderStatus())) {
             throw new InvalidStatusException("Order cannot be changed");
         }
         order.setOrderStatus(updateStatusRequest.status());
         return conversionService.convert(orderRepository.save(order), OrderDTO.class);
     }
-
 
     @Override
     public Map<UUID, List<OrderInfo>> getOrdersInfoGroupByProductId() {
@@ -227,13 +230,53 @@ public class OrderServiceImpl implements OrderService {
                         }, Collectors.toList())));
     }
 
+    @Override
+    public void confirm(UUID orderId, Long customerId) {
+        Order order = getVerifiedOrder(orderId, customerId);
+        String customerLogin = order.getCustomer().getLogin();
+        CompletableFuture<Map<String, String>> accountFuture = accountService.getAsyncAccounts(List.of(customerLogin));
+        CompletableFuture<Map<String, String>> innFuture = crmService.getAsyncInn(List.of(customerLogin));
+        String inn = Optional.ofNullable(innFuture.join())
+                .orElseThrow(() -> new ResourceNotFoundException("CRM service is unavailable")).get(customerLogin);
+        String accountNumber = Optional.ofNullable(accountFuture.join())
+                .orElseThrow(() -> new ResourceNotAvailableException("Account service is unavailable")).get(customerLogin);
+        UUID businessKey = confirmEvent.startProcess(
+                order.getDeliveryAddress(),
+                inn,
+                accountNumber,
+                order.getProducts().stream()
+                        .map(product ->
+                                product.getPrice()
+                                        .multiply(BigDecimal.valueOf(product.getQuantity())))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add),
+                customerLogin,
+                order.getId(),
+                order.getCustomer().getId());
+        order.setOrderStatus(OrderStatus.PROCESSING);
+        order.setBusinessKey(businessKey);
+        orderRepository.save(order);
+
+    }
+
+    @Override
+    public void updateStatusAndSetDeliveryDate(UUID orderId, OrderStatus status, LocalDate date) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order by id: " + orderId + " not found"));
+        if (unchangeableStatuses.contains(order.getOrderStatus())) {
+            throw new InvalidStatusException("Order cannot be changed");
+        }
+        order.setOrderStatus(status);
+        order.setDeliveryDate(date);
+        orderRepository.save(order);
+    }
+
     private Order getVerifiedOrder(UUID id, Long customerId) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order by id: " + id + " not found"));
         if (!order.getCustomer().getId().equals(customerId)) {
             throw new ForbiddenException("Customer id != Customer in order");
         }
-        if (!order.getOrderStatus().equals(OrderStatus.CREATED)) {
+        if (unchangeableStatuses.contains(order.getOrderStatus())) {
             throw new InvalidStatusException("Order cannot be changed");
         }
         return order;
