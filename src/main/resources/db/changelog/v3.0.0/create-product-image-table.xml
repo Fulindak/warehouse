@@ -12,9 +12,6 @@
             <column name="image_id" type="uuid">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_image_product"/>
             </column>
-            <column name="expansion" type="varchar(10)">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
 

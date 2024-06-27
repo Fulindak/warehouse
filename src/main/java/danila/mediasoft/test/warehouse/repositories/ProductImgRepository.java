@@ -13,8 +13,8 @@ import java.util.UUID;
 public interface ProductImgRepository extends JpaRepository<ProductImg, UUID> {
     @Modifying
     @Query(value = """
-            insert into product_image (product_id, image_id, expansion)
-            values (:productId, :imgId, :expansion)
+            insert into product_image (product_id, image_id)
+            values (:productId, :imgId)
             """, nativeQuery = true)
-    void uploadImg(@Param("productId") UUID productId, @Param("imgId") UUID imgId, @Param("expansion") String expansion);
+    void uploadImg(@Param("productId") UUID productId, @Param("imgId") UUID imgId);
 }

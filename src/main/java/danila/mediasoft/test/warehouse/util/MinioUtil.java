@@ -28,9 +28,8 @@ public class MinioUtil {
         UUID fileId = UUID.randomUUID();
         Map<String, String> metaData = new HashMap<>();
         try {
-            metaData.put(X_META_FILENAME, file.getName());
+            metaData.put(X_META_FILENAME, file.getOriginalFilename());
             metaData.put(X_META_EXPANSION, getExtension(file));
-
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(properties.bucket())
                     .object(fileId.toString())
@@ -42,6 +41,7 @@ public class MinioUtil {
         }
         return fileId;
     }
+
     private String getExtension(MultipartFile image) {
         return image.getOriginalFilename()
                 .substring(image.getOriginalFilename()

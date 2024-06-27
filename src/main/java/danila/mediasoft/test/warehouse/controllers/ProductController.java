@@ -8,14 +8,15 @@ import danila.mediasoft.test.warehouse.dto.product.UpdateProductDTO;
 import danila.mediasoft.test.warehouse.dto.product.UpdateQuantityDTO;
 import danila.mediasoft.test.warehouse.services.ProductService;
 import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -120,7 +123,13 @@ public class ProductController {
 
     @PostMapping(value = "/{productId}/download", produces = "application/zip")
     @ResponseStatus(HttpStatus.OK)
-    public void downloadImgs(@PathVariable UUID productId, HttpServletResponse response) {
-        productService.downloadImgs(productId, response);
+    public ResponseEntity<StreamingResponseBody> downloadImgsZip(@PathVariable UUID productId) {
+        StreamingResponseBody responseBody = outputStream -> {
+            productService.downloadImgsZip(productId, outputStream);
+        };
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + productId + "_" + LocalDateTime.now() + ".zip\"")
+                .contentType(MediaType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE))
+                .body(responseBody);
     }
 }

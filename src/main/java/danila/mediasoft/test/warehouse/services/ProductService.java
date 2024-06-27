@@ -15,20 +15,18 @@ import danila.mediasoft.test.warehouse.services.search.ProductSpecification;
 import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
 import danila.mediasoft.test.warehouse.util.MinioUtil;
 import io.minio.StatObjectResponse;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -147,29 +145,24 @@ public class ProductService {
         Optional.ofNullable(image)
                 .orElseThrow(() -> new UploadException("Image must not be null "));
         UUID imageId = minioUtil.uploadFile(image);
-        productImgRepository.uploadImg(productId, imageId, "getExtension(image)");
+        productImgRepository.uploadImg(productId, imageId);
         return imageId;
     }
 
     @Transactional
     @SneakyThrows
-    public void downloadImgs(UUID productId, HttpServletResponse response) {
+    public void downloadImgsZip(UUID productId, OutputStream outputStream) {
         Product product = getProductAndTypes(productId);
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                .filename(product.getName() + "-" + product.getArticle() + ".zip")
-                .build()
-                .toString());
         Set<ProductImg> imagesId = product.getImages();
-        try (ZipOutputStream zip = new ZipOutputStream(response.getOutputStream())) {
+        try (ZipOutputStream zip = new ZipOutputStream(outputStream)) {
             for (ProductImg img : imagesId) {
                 StatObjectResponse stat = minioUtil.getStatFromFile(img.getImageId().toString());
                 String fileName = stat.userMetadata().get(MinioUtil.X_META_FILENAME);
-                String fileExpansion = stat.userMetadata().get(MinioUtil.X_META_EXPANSION);
                 byte[] file = minioUtil.loadFile(img.getImageId().toString());
                 if (file == null || file.length == 0) continue;
-                zip.putNextEntry(new ZipEntry(fileName + "." + fileExpansion));
+                zip.putNextEntry(new ZipEntry(fileName));
                 StreamUtils.copy(file, zip);
-                zip.flush();
+                zip.closeEntry();
             }
         }
     }

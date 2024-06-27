@@ -24,10 +24,9 @@ import java.util.UUID;
 @Table(name = "product_image")
 public class ProductImg {
     @Id
+    @Column(name = "image_id")
     private UUID imageId;
     @ManyToOne
     @Fetch(FetchMode.JOIN)
     private Product product;
-    @Column(name = "expansion")
-    private String expansion;
 }
