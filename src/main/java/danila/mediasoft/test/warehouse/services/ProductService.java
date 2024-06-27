@@ -14,6 +14,7 @@ import danila.mediasoft.test.warehouse.repositories.ProductRepository;
 import danila.mediasoft.test.warehouse.services.search.ProductSpecification;
 import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
 import danila.mediasoft.test.warehouse.util.MinioUtil;
+import io.minio.StatObjectResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -142,16 +143,12 @@ public class ProductService {
     }
 
     @Transactional
-    public void upload(UUID productId, MultipartFile image) {
+    public UUID upload(UUID productId, MultipartFile image) {
         Optional.ofNullable(image)
                 .orElseThrow(() -> new UploadException("Image must not be null "));
-        productImgRepository.uploadImg(productId, minioUtil.uploadFile(image), getExtension(image));
-    }
-
-    private String getExtension(MultipartFile image) {
-        return image.getOriginalFilename()
-                .substring(image.getOriginalFilename()
-                        .lastIndexOf(".") + 1);
+        UUID imageId = minioUtil.uploadFile(image);
+        productImgRepository.uploadImg(productId, imageId, "getExtension(image)");
+        return imageId;
     }
 
     @Transactional
@@ -165,9 +162,12 @@ public class ProductService {
         Set<ProductImg> imagesId = product.getImages();
         try (ZipOutputStream zip = new ZipOutputStream(response.getOutputStream())) {
             for (ProductImg img : imagesId) {
+                StatObjectResponse stat = minioUtil.getStatFromFile(img.getImageId().toString());
+                String fileName = stat.userMetadata().get(MinioUtil.X_META_FILENAME);
+                String fileExpansion = stat.userMetadata().get(MinioUtil.X_META_EXPANSION);
                 byte[] file = minioUtil.loadFile(img.getImageId().toString());
                 if (file == null || file.length == 0) continue;
-                zip.putNextEntry(new ZipEntry(img.getImageId().toString() + "." + img.getExpansion()));
+                zip.putNextEntry(new ZipEntry(fileName + "." + fileExpansion));
                 StreamUtils.copy(file, zip);
                 zip.flush();
             }

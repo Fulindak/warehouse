@@ -1,6 +1,11 @@
 package danila.mediasoft.test.warehouse.controllers;
 
-import danila.mediasoft.test.warehouse.dto.product.*;
+import danila.mediasoft.test.warehouse.dto.product.CreateProductDTO;
+import danila.mediasoft.test.warehouse.dto.product.ProductCreatedResponseDTO;
+import danila.mediasoft.test.warehouse.dto.product.ProductDTO;
+import danila.mediasoft.test.warehouse.dto.product.ProductResponse;
+import danila.mediasoft.test.warehouse.dto.product.UpdateProductDTO;
+import danila.mediasoft.test.warehouse.dto.product.UpdateQuantityDTO;
 import danila.mediasoft.test.warehouse.services.ProductService;
 import danila.mediasoft.test.warehouse.services.search.creteria.Criteria;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +18,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -100,13 +114,13 @@ public class ProductController {
 
     @PostMapping("/{productId}/upload")
     @ResponseStatus(HttpStatus.CREATED)
-    public void uploadImg(@PathVariable UUID productId, @RequestParam("file") MultipartFile image) {
-        productService.upload(productId, image);
+    public UUID uploadImg(@PathVariable UUID productId, @RequestParam("file") MultipartFile image) {
+        return productService.upload(productId, image);
     }
 
-    @PostMapping(value = "/{productId}/download", produces="application/zip")
+    @PostMapping(value = "/{productId}/download", produces = "application/zip")
     @ResponseStatus(HttpStatus.OK)
     public void downloadImgs(@PathVariable UUID productId, HttpServletResponse response) {
-         productService.downloadImgs(productId, response);
+        productService.downloadImgs(productId, response);
     }
 }
