@@ -66,7 +66,13 @@ public class ControllerAdvice {
 
     @ExceptionHandler(CurrencyFileWriteException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleIllegalCurrencyType(CurrencyFileWriteException e) {
+    public ErrorResponse handleCurrencyFileWrite(CurrencyFileWriteException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
+    }
+
+    @ExceptionHandler(UploadException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUpload(UploadException e) {
         return new ErrorResponse(e.getMessage(), e.getClass().getSimpleName(), e.getStackTrace()[0].getClassName());
     }
 }

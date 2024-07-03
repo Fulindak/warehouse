@@ -1,5 +1,6 @@
 package danila.mediasoft.test.warehouse.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -50,6 +52,8 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "product_type_id")
     )
     private List<ProductType> productTypes;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<ProductImg> images;
     @UpdateTimestamp
     @Column(name = "update_at")
     private LocalDateTime updateAt;

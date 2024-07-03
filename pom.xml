@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <modelmapper.version>2.3.0</modelmapper.version>
         <webmvc-ui.version>2.0.2</webmvc-ui.version>
+        <minio.version>8.5.5</minio.version>
     </properties>
     <dependencies>
         <dependency>
@@ -83,6 +84,11 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-relational</artifactId>
             <version>3.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.kafka</groupId>

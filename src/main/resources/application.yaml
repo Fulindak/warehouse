@@ -32,3 +32,9 @@ spring:
     cache-names: currencyRates
     caffeine:
       spec: maximumSize=500, expireAfterAccess=60s
+
+minio:
+  bucket: ${MINIO_BUCKET}
+  url: ${MINIO_URL}
+  accessKey: ${MINIO_ACCESS_KEY}
+  secretKey: ${MINIO_SECRET_KEY}
