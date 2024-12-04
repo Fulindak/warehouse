@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demok8-app
+  namespace: myspace
+spec:
+  containers:
+    - name: demok8-app
+      image: denuar/product-service:latest
+      ports:
+        - containerPort: 8188
+          name: demok8-app

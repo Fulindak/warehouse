@@ -1,0 +1,31 @@
+spring:
+  config:
+    import: file:./.env[.properties],file:.env[.properties]
+
+  application:
+    name: warehouse
+    current-profile: h2
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:${DATABASE_DB:warehouse};LOCK_TIMEOUT=60000
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+  liquibase:
+    enabled: false
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+server:
+  port: ${APP_PORT:8188}
+  servlet:
+    context-path: /api/v0

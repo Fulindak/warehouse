@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-product-image" author="danila">
+        <createTable tableName="product_image">
+            <column name="product_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="uuid">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_image_product"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-fk-product-image" author="danila">
+        <addForeignKeyConstraint baseTableName="product_image" baseColumnNames="product_id"
+                                 constraintName="product_id"
+                                 referencedTableName="product" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

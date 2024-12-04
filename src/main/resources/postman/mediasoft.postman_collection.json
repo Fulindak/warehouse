@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "4e089e57-09b2-4b12-a282-ecbe75b6f2c7",
+		"name": "mediasoft",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25403259"
+	},
+	"item": [
+		{
+			"name": "getAllProductTypes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8189/api/v0/product-types/"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateProductType",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"13289564\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8189/api/v0/product-types/"
+			},
+			"response": []
+		},
+		{
+			"name": "getAllProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8189/api/v0/products/"
+			},
+			"response": []
+		},
+		{
+			"name": "createProduct",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Test\",\r\n  \"article\": \"1238790\",\r\n  \"types\": [\r\n    1,\r\n    2,\r\n    3,\r\n    4,\r\n    5\r\n  ],\r\n  \"quantity\": 25,\r\n  \"price\": 123874\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8189/api/v0/products/"
+			},
+			"response": []
+		},
+		{
+			"name": "deleteTypeFromProduct",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8189/api/v0/products/c0a83b01-8e76-1dfc-818e-768f34290000/type?typeId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8189",
+					"path": [
+						"api",
+						"v0",
+						"products",
+						"c0a83b01-8e76-1dfc-818e-768f34290000",
+						"type"
+					],
+					"query": [
+						{
+							"key": "typeId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addTypeFromProduct",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "http://localhost:8189/api/v0/products/c0a83b01-8e76-1dfc-818e-768f34290000/type/1"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Product by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8189/api/v0/products/c0a83b01-8e76-1dfc-818e-768f34290000"
+			},
+			"response": []
+		},
+		{
+			"name": "producUpdateQuantity",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"quantity\" : 99999\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8189/api/v0/products/c0a83b01-8e76-176f-818e-7677f9790000/quantity",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8189",
+					"path": [
+						"api",
+						"v0",
+						"products",
+						"c0a83b01-8e76-176f-818e-7677f9790000",
+						"quantity"
+					],
+					"query": [
+						{
+							"key": "Content-Type",
+							"value": "application/json-patch+json",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "producUpdate",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Test_1\",\r\n  \"article\": \"1238790\",\r\n  \"types\": [\r\n    1,\r\n    2,\r\n    3,\r\n    5\r\n  ],\r\n  \"quantity\": 25,\r\n  \"price\": 123874\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8189/api/v0/products/c0a8f001-8e7b-1422-818e-7b30165a0000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8189",
+					"path": [
+						"api",
+						"v0",
+						"products",
+						"c0a8f001-8e7b-1422-818e-7b30165a0000"
+					],
+					"query": [
+						{
+							"key": "Content-Type",
+							"value": "application/json-patch+json",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,40 @@
+rest:
+  currency-service:
+    host: ${CURRENCY_SERVICE_URL:http://localhost:8081}
+    filePath: exchange-rate.json
+    mock: ${CURRENCY_SERVICE_MOCK:false}
+    methods:
+      get-currency: ${CRM_SERVICE_GET_CURRENCY_METHOD:/api/v1/currencies}
+  crm-service:
+    host: ${CRM_SERVICE_URL:http://localhost:8081}
+    mock: ${CRM_SERVICE_MOCK:false}
+    methods:
+      get-inn: ${CRM_SERVICE_GET_INN_METHOD:/api/v1/inn}
+  account-service:
+    host: ${ACCOUNT_SERVICE_URL:http://localhost:8081}
+    mock: ${ACCOUNT_SERVICE_MOCK:false}
+    methods:
+      get-accounts: ${ACCOUNT_SERVICE_GET_ACCOUNT_METHOD:/api/v1/accounts}
+
+app:
+  kafka:
+    enabled: ${KAFKA_ENABLE:true}
+
+kafka:
+  enabled: ${KAFKA_ENABLE:true}
+  url: ${KAFKA_URL:localhost:9091}
+  groupId: ${KAFKA_CONSUMER_CROUP_ID:group1}
+
+spring:
+  profiles:
+    active: postgres
+  cache:
+    cache-names: currencyRates
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=60s
+
+minio:
+  bucket: ${MINIO_BUCKET}
+  url: ${MINIO_URL}
+  accessKey: ${MINIO_ACCESS_KEY}
+  secretKey: ${MINIO_SECRET_KEY}
